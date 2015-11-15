@@ -16,14 +16,18 @@ import java.util.Date;
 public class DateAttribute extends Attribute {
 	
 	private DateFormat format;
+	public final double earliest;
+	public final double latest;
 
-	public DateAttribute(String name, AttributeType type, String format) {
-		this(name, "", type, format);
+	public DateAttribute(String name, AttributeType type, String format, int id) throws ParseException {
+		this(name, "", type, format, id);
 	}
 	
-	public DateAttribute(String name, String description, AttributeType type, String format) {
-		super(name, description, type);
+	public DateAttribute(String name, String description, AttributeType type, String format, int id) throws ParseException {
+		super(name, description, type, id);
 		this.setFormat(format);
+		earliest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("1800-01-01"));
+		latest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("2500-01-01"));
 	}
 
 	public DateFormat getFormat() {
@@ -36,6 +40,14 @@ public class DateAttribute extends Attribute {
 
 	public void setFormat(DateFormat format) {
 		this.format = format;
+	}
+	
+	public double getEarliest() {
+		return earliest;
+	}
+	
+	public double getLatest() {
+		return latest;
 	}
 	
     /**

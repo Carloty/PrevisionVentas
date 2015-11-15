@@ -19,12 +19,12 @@ public class NominalAttribute extends Attribute {
 	
 	private Map<String, Integer> map;
 	
-	public NominalAttribute(String name, AttributeType type, String[] values) {
-		this(name, "", type, values);
+	public NominalAttribute(String name, AttributeType type, String[] values, int id) {
+		this(name, "", type, values, id);
 	}
 	
-	public NominalAttribute(String name, String description, AttributeType type, String[] values) {
-		super(name, description, type);
+	public NominalAttribute(String name, String description, AttributeType type, String[] values, int id) {
+		super(name, description, type, id);
 		this.values = new ArrayList<String>();
 		this.map = new HashMap<String, Integer>();
 		for (int i = 0; i < values.length; i++) {

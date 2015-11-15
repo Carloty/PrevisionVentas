@@ -12,14 +12,17 @@ public abstract class Attribute {
 	
 	private String description;
 	
-	public Attribute(String name, AttributeType type) {
-		this(name, "", type);
+	private int id;
+	
+	public Attribute(String name, AttributeType type, int id) {
+		this(name, "", type, id);
 	}
 	
-	public Attribute(String name, String description, AttributeType type) {
+	public Attribute(String name, String description, AttributeType type, int id) {
 		setName(name);
 		setType(type);
 		setDescription(description);
+		setId(id);
 	}
 
 	public String getName() {
@@ -44,6 +47,14 @@ public abstract class Attribute {
 
 	public void setType(AttributeType type) {
 		this.type = type;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public abstract double valueOf(String string) throws ParseException;
