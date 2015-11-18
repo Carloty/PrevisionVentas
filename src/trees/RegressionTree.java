@@ -98,4 +98,24 @@ public class RegressionTree {
 			return root;
 		}
 	}
+	
+	/**
+	 * Get the fitness of this tree
+	 * 
+	 * @param data
+	 * 		Data to predict, in an array of doubles, one line per data to predict
+	 * @return
+	 * 		The fitness of this tree (mean of the commeted errors)
+	 */
+	public double getFitness(double[][] data){
+		double fitness = 0;
+		
+		double error;
+		for (int i = 0; i < data.length; i++){
+			error = Math.pow(this.predict(data[i]) - data[i][data[i].length], 2);
+			fitness = fitness + error;
+		}
+		
+		return fitness/data.length;
+	}
 }
