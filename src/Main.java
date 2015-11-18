@@ -51,6 +51,13 @@ public class Main {
 			System.out.println(tree.predict(data));
 			
 			
+			/*
+			 * Test import data
+			 */
+			double[][] dataCSV = Parser.getDataFromSCVFile("age_pr2_without.csv");
+			System.out.println("Number of instances :" + dataCSV.length);
+			System.out.println("Number of attributes :" + (dataCSV[0].length-1));
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
