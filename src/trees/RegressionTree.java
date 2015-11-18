@@ -8,17 +8,25 @@ import trees.attributes.DateAttribute;
 import trees.attributes.NominalAttribute;
 import trees.attributes.NumericalAttribute;
 
+/*
+ * Represents a regression tree, supported for genetic programming
+ */
 public class RegressionTree {
+	
+	// The list of the available attributes in the data
 	private List<Attribute> attributes = null;
+	// Reference to the root node of the tree
 	private Node root = null;
+	// Maximum depth of the tree
 	private int depth = 0;
 	
+	// Random constructor for a tree using a list of attributes and a maximum depth
 	public RegressionTree(List<Attribute> attributes, int depthMax) {
 		setAttributes(attributes);
 		setDepth(depthMax);
 		setRoot(randomInitialization(depthMax));
 	}
-	
+
 	public RegressionTree(Node root) {
         setRoot(root);
 	}
@@ -42,10 +50,20 @@ public class RegressionTree {
 		this.root = root;
 	}
 	
+	/*
+	 *  Predict a value for the data (output value of the ultimate leaf reached)
+	 */
 	public double predict(double[] data) {
 		return root.predict(data);
 	}
 	
+	/*
+	 * Recursively build a regression tree. 
+	 * If the depth is 1, the method returns a leaf node containing a random output value
+	 * Else, for each node, an attribute is randomly selected.
+	 * For Numerical or Date attribute, the split value for the node is randomly selected within the range defined for the attribute
+	 * (see attributes constructors)
+	 */
 	private Node randomInitialization(int depth) {
 		Node root;
 		if (depth == 1) {

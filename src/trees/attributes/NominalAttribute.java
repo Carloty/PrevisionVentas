@@ -15,14 +15,46 @@ import java.util.Map;
  */
 public class NominalAttribute extends Attribute {
 
+	/**
+	 * Values taken by the attribute
+	 */
 	private List<String> values;
 	
+	/**
+	 * Mapping the values taken by the attribute with an int corresponding to their ID
+	 */
 	private Map<String, Integer> map;
 	
+	/**
+	 * Constructor of a NominalAttribute (without description)
+	 * 
+	 * @param name
+	 * 		Name of the attribute
+	 * @param type
+	 * 		Type of the attribute (see AttributeType in Attribute class)
+	 * @param values
+	 * 		Values taken by the attribute
+	 * @param id
+	 * 		The id of the attribute in the list of attributes in which it is added
+	 */
 	public NominalAttribute(String name, AttributeType type, String[] values, int id) {
 		this(name, "", type, values, id);
 	}
 	
+	/**
+	 * Constructor of a NominalAttribute
+	 * 
+	 * @param name
+	 * 		Name of the attribute
+	 * @param description
+	 * 		Description of the attribute
+	 * @param type
+	 * 		Type of the attribute (see AttributeType in Attribute class)
+	 * @param values
+	 * 		Values taken by the attribute
+	 * @param id
+	 * 		The id of the attribute in the list of attributes in which it is added
+	 */
 	public NominalAttribute(String name, String description, AttributeType type, String[] values, int id) {
 		super(name, description, type, id);
 		this.values = new ArrayList<String>();
@@ -33,14 +65,32 @@ public class NominalAttribute extends Attribute {
         }
 	}
 	
+	/**
+	 * Get the number of values that the attribute can take
+	 * 
+	 * @return
+	 * 		The number of possible values
+	 */
 	public int size() {
         return this.values.size();
     }
 	
+	/**
+	 * Get an array of String with all the possible values of the attribute
+	 * 
+	 * @return
+	 * 		String[] containing all the possible values
+	 */
 	public String[] values() {
         return values.toArray(new String[values.size()]);
     }
 	
+	/**
+	 * Get an array of integers representing the values taken by the attributes in numeric format
+	 * 
+	 * @return
+	 * 		int[] containing the numbers representing each possible value of the attribute
+	 */
 	public int[] getSplitValues(){
 		int[] splitValues = new int[this.size()];
 		for (int i = 0 ; i<this.size(); i++){
@@ -49,6 +99,9 @@ public class NominalAttribute extends Attribute {
 		return splitValues;
 	}
 
+	/**
+	 * Get the double value associated to a value taken by the nominal attribute
+     */
 	@Override
     public double valueOf(String s) {// throws ParseException {
         Integer i = map.get(s);

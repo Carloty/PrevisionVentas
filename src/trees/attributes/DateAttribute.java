@@ -15,14 +15,55 @@ import java.util.Date;
  */
 public class DateAttribute extends Attribute {
 	
+	/**
+	 * The date format (yyyy-MM-dd for example)
+	 */
 	private DateFormat format;
+	
+	/**
+	 * The earliest possible date
+	 * (initialize at 01/01/1800 in constructor)
+	 */
 	public final double earliest;
+	
+	/**
+	 * The latest possible date
+	 * (initialize at 01/01/2500 in constructor)
+	 */
 	public final double latest;
 
+	/**
+	 * Constructor of an DateAttribute (without description)
+	 * 
+	 * @param name
+	 * 		Name of the attribute
+	 * @param type
+	 * 		Type of the attribute (see AttributeType in Attribute class)
+	 * @param format
+	 * 		The date format associated to this attribute
+	 * @param id
+	 * 		The id of the attribute in the list of attributes in which it is added
+	 * @throws ParseException
+	 */
 	public DateAttribute(String name, AttributeType type, String format, int id) throws ParseException {
 		this(name, "", type, format, id);
 	}
 	
+	/**
+	 * Constructor of an DateAttribute
+	 * 
+	 * @param name
+	 * 		Name of the attribute
+	 * @param description
+	 * 		Description of the attribute
+	 * @param type
+	 * 		Type of the attribute (see AttributeType in Attribute class)
+	 * @param format
+	 * 		The date format associated to this attribute
+	 * @param id
+	 * 		The id of the attribute in the list of attributes in which it is added
+	 * @throws ParseException
+	 */
 	public DateAttribute(String name, String description, AttributeType type, String format, int id) throws ParseException {
 		super(name, description, type, id);
 		this.setFormat(format);
@@ -51,19 +92,22 @@ public class DateAttribute extends Attribute {
 	}
 	
     /**
-     * Generate the date string.
+     * Generate the string associated to a Date object.
      */
     public String toString(Date date) {
         return this.format.format(date);
     }
     
     /**
-     * Returns the double value representation of a data object.
+     * Returns the double value representation of a Date.
      */
     public double valueOf(Date date) {
         return Double.longBitsToDouble(date.getTime());
     }
     
+    /**
+	 * Get the double value associated to a string representing a Date
+     */
     @Override
     public double valueOf(String s) throws ParseException {
         Date d = format.parse(s);
