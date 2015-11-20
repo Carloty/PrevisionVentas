@@ -61,12 +61,18 @@ public class Main {
 			/*
 			 * Test choosing attributes
 			 */
-			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
-			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);
+			/*int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);*/
 			
+			/*
+			 * Test RegressionTree.getFitness
+			 */
+			RegressionTree treeBis = new RegressionTree(l, 3);
+			double[][] test = Parser.getNSamples(10, dataCSV);
+			
+			System.out.println("Fitness with 10 samples : "+treeBis.getFitness(test));			
 			
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			System.out.println("WRONG MAIN");
 		}
 

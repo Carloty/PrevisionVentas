@@ -107,7 +107,7 @@ public class Node {
 			// ADDED FOR NULL VALUES
 			// if the associated data is null (=-INF) and the attribute take null values into account, return last child
 			if(data[attributeId] == Double.NEGATIVE_INFINITY && this.attribute.isNullValuePossible()){
-				return children.get(this.children.size()).predict(data);
+				return children.get(this.children.size()-1).predict(data);
 			} else {
 				if (this.attribute.getType() == Attribute.AttributeType.NOMINAL) {
 					NominalAttribute at = (NominalAttribute)attribute;				

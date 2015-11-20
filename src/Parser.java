@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import trees.attributes.Attribute;
 import trees.attributes.DateAttribute;
@@ -190,5 +191,17 @@ public class Parser {
 		} else {
 			return data;
 		}
+	}
+
+	public static double[][] getNSamples(int n, double[][] data){
+		Random r = new Random();
+		double[][] samples = new double[n][data[0].length];
+		
+		for(int i=0; i<n; i++){
+			int index = r.nextInt(data.length);
+			samples[i] = data[index];
+		}
+		
+		return samples;
 	}
 }

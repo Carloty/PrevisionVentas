@@ -114,10 +114,9 @@ public class RegressionTree {
 	 */
 	public double getFitness(double[][] data){
 		double fitness = 0;
-		
 		double error;
 		for (int i = 0; i < data.length; i++){
-			error = Math.pow(this.predict(data[i]) - data[i][data[i].length], 2);
+			error = Math.abs(this.predict(data[i]) - data[i][data[i].length-1]);
 			fitness = fitness + error;
 		}
 		
