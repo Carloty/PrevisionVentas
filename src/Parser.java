@@ -132,4 +132,53 @@ public class Parser {
 		
 		return fileLines;
 	}
+	
+	public static boolean modifyListAttributes(List<Attribute> attributesList, int[] attributesToKeep, double[][] data){
+		List<Attribute> newList = new ArrayList<Attribute>();
+		if (attributesList.size() == attributesToKeep.length){
+			// Creating a new list with attributes to keep
+			for (int i=0; i< attributesToKeep.length; i++){
+				if (attributesToKeep[i] == 1){
+					newList.add(attributesList.get(i));
+				}
+			}
+			
+			// Keeping cols of data array associated to the attributes to keep
+			double[][] temp = new double[data.length][newList.size()];
+			for(int row = 0; row < data.length; row++){
+				// column index of the new array
+				int index = 0;
+				for(int col = 0; col < data[0].length; col++){
+					// if the attribute is to be kept
+					if (attributesToKeep[col] == 1){
+						temp[row][index] = data[row][col];
+						index++;
+					}
+				}
+			}
+			// Updating data array
+			data = null;
+			data = new double[temp.length][temp[0].length];
+			//data = temp;
+			for(int row = 0; row < data.length; row++){
+				for(int col = 0; col < data[0].length; col++){
+					data[row][col] = temp[row][col];
+				}
+			}
+			
+			// Updating attributes ID
+			for (int i=0; i< newList.size(); i++){
+				Attribute att = newList.get(i);
+				att.setId(i);
+				newList.remove(i); newList.add(i, att); // TODO or not ?
+			}	
+			
+			attributesList.clear();
+			attributesList.addAll(newList);
+			
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
