@@ -45,8 +45,8 @@ public class DateAttribute extends Attribute {
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 * @throws ParseException
 	 */
-	public DateAttribute(String name, AttributeType type, String format, int id) throws ParseException {
-		this(name, "", type, format, id);
+	public DateAttribute(String name, AttributeType type, String format, int id, boolean nullPossible) throws ParseException {
+		this(name, "", type, format, id, nullPossible);
 	}
 	
 	/**
@@ -64,8 +64,8 @@ public class DateAttribute extends Attribute {
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 * @throws ParseException
 	 */
-	public DateAttribute(String name, String description, AttributeType type, String format, int id) throws ParseException {
-		super(name, description, type, id);
+	public DateAttribute(String name, String description, AttributeType type, String format, int id, boolean nullPossible) throws ParseException {
+		super(name, description, type, id, nullPossible);
 		this.setFormat(format);
 		earliest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("1800-01-01"));
 		latest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("2500-01-01"));
@@ -110,8 +110,13 @@ public class DateAttribute extends Attribute {
      */
     @Override
     public double valueOf(String s) throws ParseException {
-        Date d = format.parse(s);
-        return Double.longBitsToDouble(d.getTime());
+    	if (!s.equals("")){
+    		Date d = format.parse(s);
+            return Double.longBitsToDouble(d.getTime());
+    	} else {
+    		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
+    	}
+        
     }
 
 }

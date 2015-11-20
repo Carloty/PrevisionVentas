@@ -37,8 +37,8 @@ public class NumericalAttribute extends Attribute {
 	 * @param max
 	 * 		The maximum value that can be reached by the attribute
 	 */
-	public NumericalAttribute(String name, AttributeType type, int id, double min, double max) {
-		this(name, "", type, id, min, max);
+	public NumericalAttribute(String name, AttributeType type, int id, double min, double max, boolean nullPossible) {
+		this(name, "", type, id, min, max, nullPossible);
 	}
 	
 	/**
@@ -57,8 +57,8 @@ public class NumericalAttribute extends Attribute {
 	 * @param max
 	 * 		The maximum value that can be reached by the attribute
 	 */
-	public NumericalAttribute(String name, String description, AttributeType type, int id, double min, double max) {
-		super(name, description, type, id);
+	public NumericalAttribute(String name, String description, AttributeType type, int id, double min, double max, boolean nullPossible) {
+		super(name, description, type, id, nullPossible);
 		this.min = min;
 		this.max = max;
 	}
@@ -83,8 +83,13 @@ public class NumericalAttribute extends Attribute {
 	 * Convert a value from the String format into a double
 	 */
 	@Override
-	public double valueOf(String string) throws ParseException {
-		return Double.valueOf(string);
+	public double valueOf(String s) throws ParseException {
+		if (!s.equals("")){
+			return Double.valueOf(s);
+		} else {
+    		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
+    	}
+		
 	}
 
 }

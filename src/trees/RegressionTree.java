@@ -95,6 +95,11 @@ public class RegressionTree {
 				root.addChild(randomInitialization(depth-1));
 				root.addChild(randomInitialization(depth-1));
 			}
+			// ADDED FOR NULL VALUES
+			// adding a child at the end of children list to take into account null values (<-> -INF in double)
+			if(attribute.isNullValuePossible()){
+				root.addChild(randomInitialization(depth-1));
+			}
 			return root;
 		}
 	}

@@ -15,44 +15,43 @@ public class Parser {
 		List<Attribute> attributes = new ArrayList<Attribute>();
 		
 		try {
-			attributes.add(new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115));
+			attributes.add(new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115, false));
 			
 			String[] tipoTienda = {"a", "b", "c", "d"};
-			attributes.add(new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1));
+			attributes.add(new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1, false));
 			
 			String[] surdito = {"a", "b", "c"};
-			attributes.add(new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2));
+			attributes.add(new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2, false));
 			
-			attributes.add(new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000));
+			attributes.add(new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000, false));
 			
-			attributes.add(new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "dd/MM/yyyy", 4));
+			attributes.add(new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "dd/MM/yyyy", 4, true));
 			
-			attributes.add(new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1));
+			attributes.add(new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1, false));
 			
-			attributes.add(new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 50));
+			attributes.add(new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 50, true));
 			
-			attributes.add(new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2000, 2020));
+			attributes.add(new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2000, 2020, true));
 			
-			// TODO IntervaloPromocion OK ?
-			String[] mesPromocion = {"0", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-			attributes.add(new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8));
-			attributes.add(new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9));
-			attributes.add(new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10));
-			attributes.add(new NominalAttribute("cuartoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 11));
+			String[] mesPromocion = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+			attributes.add(new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8, true));
+			attributes.add(new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9, true));
+			attributes.add(new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10, true));
+			attributes.add(new NominalAttribute("cuartoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 11, true));
 			
 			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
-			attributes.add(new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12));
+			attributes.add(new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12, false));
 			
-			attributes.add(new DateAttribute("fecha", Attribute.AttributeType.DATE, "dd/MM/yyyy", 13));
+			attributes.add(new DateAttribute("fecha", Attribute.AttributeType.DATE, "dd/MM/yyyy", 13, false));
 
-			attributes.add(new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1));
+			attributes.add(new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
 
-			attributes.add(new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1));
+			attributes.add(new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1, false));
 			
 			String[] festivo = {"0", "a", "b", "c"};
-			attributes.add(new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 16));
+			attributes.add(new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 16, false));
 			
-			attributes.add(new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1));
+			attributes.add(new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1, false));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

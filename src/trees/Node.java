@@ -104,22 +104,28 @@ public class Node {
 		} else {
 			int attributeId = this.attribute.getId();
 			
-			if (this.attribute.getType() == Attribute.AttributeType.NOMINAL) {
-				NominalAttribute at = (NominalAttribute)attribute;				
-				int[] splitValues = at.getSplitValues();
-				for (int i = 0; i < splitValues.length; i++) {
-					if ((data[attributeId] == (double)splitValues[i])){
-						return children.get(i).predict(data);
-					}
-				}
-				return Double.NaN;
+			// ADDED FOR NULL VALUES
+			// if the associated data is null (=-INF) and the attribute take null values into account, return last child
+			if(data[attributeId] == Double.NEGATIVE_INFINITY && this.attribute.isNullValuePossible()){
+				return children.get(this.children.size()).predict(data);
 			} else {
-				if (data[attributeId] <= splitValue) {
-                    return children.get(0).predict(data);
-                } else {
-                    return children.get(1).predict(data);
-                }
-			} 
+				if (this.attribute.getType() == Attribute.AttributeType.NOMINAL) {
+					NominalAttribute at = (NominalAttribute)attribute;				
+					int[] splitValues = at.getSplitValues();
+					for (int i = 0; i < splitValues.length; i++) {
+						if ((data[attributeId] == (double)splitValues[i])){
+							return children.get(i).predict(data);
+						}
+					}
+					return Double.NaN;
+				} else {
+					if (data[attributeId] <= splitValue) {
+	                    return children.get(0).predict(data);
+	                } else {
+	                    return children.get(1).predict(data);
+	                }
+				} 
+			}
 		}
 	}
 

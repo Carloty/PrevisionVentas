@@ -29,6 +29,8 @@ public abstract class Attribute {
 	 */
 	private int id;
 	
+	private boolean nullValuePossible;
+	
 	/**
 	 * Constructor of an Attribute
 	 * 
@@ -39,8 +41,8 @@ public abstract class Attribute {
 	 * @param id
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 */
-	public Attribute(String name, AttributeType type, int id) {
-		this(name, "", type, id);
+	public Attribute(String name, AttributeType type, int id, boolean nullPossible) {
+		this(name, "", type, id, nullPossible);
 	}
 	
 	/**
@@ -55,11 +57,12 @@ public abstract class Attribute {
 	 * @param id
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 */
-	public Attribute(String name, String description, AttributeType type, int id) {
+	public Attribute(String name, String description, AttributeType type, int id, boolean nullPossible) {
 		setName(name);
 		setType(type);
 		setDescription(description);
 		setId(id);
+		setNullValuePossible(nullPossible);
 	}
 
 	public String getName() {
@@ -86,6 +89,14 @@ public abstract class Attribute {
 		this.type = type;
 	}
 	
+	public boolean isNullValuePossible() {
+		return nullValuePossible;
+	}
+
+	public void setNullValuePossible(boolean nullValuePossible) {
+		this.nullValuePossible = nullValuePossible;
+	}
+
 	public int getId() {
 		return id;
 	}

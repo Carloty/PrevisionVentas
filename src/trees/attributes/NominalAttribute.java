@@ -37,8 +37,8 @@ public class NominalAttribute extends Attribute {
 	 * @param id
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 */
-	public NominalAttribute(String name, AttributeType type, String[] values, int id) {
-		this(name, "", type, values, id);
+	public NominalAttribute(String name, AttributeType type, String[] values, int id, boolean nullPossible) {
+		this(name, "", type, values, id, nullPossible);
 	}
 	
 	/**
@@ -55,8 +55,8 @@ public class NominalAttribute extends Attribute {
 	 * @param id
 	 * 		The id of the attribute in the list of attributes in which it is added
 	 */
-	public NominalAttribute(String name, String description, AttributeType type, String[] values, int id) {
-		super(name, description, type, id);
+	public NominalAttribute(String name, String description, AttributeType type, String[] values, int id, boolean nullPossible) {
+		super(name, description, type, id, nullPossible);
 		this.values = new ArrayList<String>();
 		this.map = new HashMap<String, Integer>();
 		for (int i = 0; i < values.length; i++) {
@@ -104,18 +104,12 @@ public class NominalAttribute extends Attribute {
      */
 	@Override
     public double valueOf(String s) {// throws ParseException {
-        Integer i = map.get(s);
-        /*if (i == null) {
-            if (open) {
-                i = values.size();
-                map.put(s, i);
-                values.add(s);
-            } else {
-                throw new IllegalArgumentException("Invalid string value: " + s);
-            }
-        }*/
-        
-        return i;
+		if (!s.equals("")){
+			Integer i = map.get(s);       
+	        return i;
+		} else {
+    		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
+    	}
     }
 	
 }
