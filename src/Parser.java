@@ -25,7 +25,7 @@ public class Parser {
 			
 			attributes.add(new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000, false));
 			
-			attributes.add(new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "dd/MM/yyyy", 4, true));
+			attributes.add(new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "yyyy-MM-dd", 4, true)); // dd/MM/yyyy
 			
 			attributes.add(new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1, false));
 			
@@ -33,7 +33,7 @@ public class Parser {
 			
 			attributes.add(new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2000, 2020, true));
 			
-			String[] mesPromocion = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+			String[] mesPromocion = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
 			attributes.add(new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8, true));
 			attributes.add(new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9, true));
 			attributes.add(new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10, true));
@@ -42,7 +42,7 @@ public class Parser {
 			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
 			attributes.add(new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12, false));
 			
-			attributes.add(new DateAttribute("fecha", Attribute.AttributeType.DATE, "dd/MM/yyyy", 13, false));
+			attributes.add(new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 13, false));
 
 			attributes.add(new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
 
@@ -55,72 +55,23 @@ public class Parser {
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println("WRONG LIST ATTRIBUTE");
 		}
 		
 		return attributes;
 	}
-
-	public static double[][] getDataFromSCVFile(String fileName){
-		List<String> fileLines = getStringsFromFile(new File(fileName));
+	
+	public static double[][] getDataFromFile(String fileName){
 		List<Attribute> attList = getAllAttributes();
-		
-		double[][] data = new double[fileLines.size()][19];
-		try {
-			String[] attributes;
-			
-			// For each line of the CSV file
-			for (int i=0; i < fileLines.size(); i++){
-				attributes = fileLines.get(i).split(",");
-				
-				data[i][0] = attList.get(0).valueOf(attributes[0]);
-				data[i][1] = attList.get(1).valueOf(attributes[1]);
-				data[i][2] = attList.get(2).valueOf(attributes[2]);
-				data[i][3] = attList.get(3).valueOf(attributes[3]);
-				
-				// Ano y mes inicio
-				String date = "01/"+attributes[5]+"/"+attributes[6];
-				data[i][4] = attList.get(4).valueOf(date);
-				
-				data[i][5] = attList.get(5).valueOf(attributes[7]);
-				data[i][6] = attList.get(6).valueOf(attributes[8]);
-				data[i][7] = attList.get(7).valueOf(attributes[9]);
-				
-				// Intervalo Promocion
-				data[i][8] = attList.get(8).valueOf(attributes[10]);
-				data[i][9] = attList.get(9).valueOf(attributes[11]);
-				data[i][10] = attList.get(10).valueOf(attributes[12]);
-				data[i][11] = attList.get(11).valueOf(attributes[13]);
-				
-				data[i][12] = attList.get(12).valueOf(attributes[14]);
-				data[i][13] = attList.get(13).valueOf(attributes[15]);
-				
-				// No se guarda el atributo Clientes : attributes[16]
-				
-				data[i][14] = attList.get(14).valueOf(attributes[17]);
-				data[i][15] = attList.get(15).valueOf(attributes[18]);
-				data[i][16] = attList.get(16).valueOf(attributes[19]);
-				data[i][17] = attList.get(17).valueOf(attributes[20]);
-				
-				// Ventas
-				data[i][18] = Double.valueOf(attributes[21]);
-				
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	
-		return data;
-	}
-	
-	public static List<String> getStringsFromFile(File file){
-		List<String> fileLines = new ArrayList<String>();
 		String line;
+		double[][] data = new double[610328][19];
+		int index = 0;
 		
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
 			
 			while ((line = br.readLine()) != null) {
-				fileLines.add(line);
+				data[index++] = Parser.transformCSVdataToDouble(line, attList);
 			}
 			
 			br.close();
@@ -130,21 +81,89 @@ public class Parser {
 			e.printStackTrace();
 		}
 		
-		return fileLines;
+		return data;
 	}
 	
-	public static boolean modifyListAttributes(List<Attribute> attributesList, int[] attributesToKeep, double[][] data){
+	public static double[] transformCSVdataToDouble(String s, List<Attribute> attList){
+		double[] data = new double[19];
+		String[] attributes = s.split(",");
+		try{
+			
+			data[0] = attList.get(0).valueOf(attributes[0]);
+			data[1] = attList.get(1).valueOf(attributes[1]);
+			data[2] = attList.get(2).valueOf(attributes[2]);
+			data[3] = attList.get(3).valueOf(attributes[3]);
+			
+			// Ano y mes inicio
+			if(!attributes[4].equals("")){
+				String date = attributes[5] + "-" + attributes[4] + "-01";
+				//String date = "01/"+attributes[5]+"/"+attributes[6];
+				data[4] = attList.get(4).valueOf(date);
+			} else {
+				data[4] = attList.get(4).valueOf("");
+			}				
+			
+			data[5] = attList.get(5).valueOf(attributes[6]);
+			data[6] = attList.get(6).valueOf(attributes[7]);
+			data[7] = attList.get(7).valueOf(attributes[8]);
+			
+			// Intervalo Promocion
+			if (attributes[9].equals("")){
+				data[8] = attList.get(8).valueOf("");
+				data[9] = attList.get(9).valueOf("");
+				data[10] = attList.get(10).valueOf("");
+				data[11] = attList.get(11).valueOf("");
+				
+				data[12] = attList.get(12).valueOf(attributes[10]);
+				data[13] = attList.get(13).valueOf(attributes[11]);
+				
+				// No se guarda el atributo Clientes : attributes[12]
+				
+				data[14] = attList.get(14).valueOf(attributes[13]);
+				data[15] = attList.get(15).valueOf(attributes[14]);
+				data[16] = attList.get(16).valueOf(attributes[15]);
+				data[17] = attList.get(17).valueOf(attributes[16]);
+				
+				// Ventas
+				data[18] = Double.valueOf(attributes[17]);
+			} else {
+				data[8] = attList.get(8).valueOf(attributes[9]);
+				data[9] = attList.get(9).valueOf(attributes[10]);
+				data[10] = attList.get(10).valueOf(attributes[11]);
+				data[11] = attList.get(11).valueOf(attributes[12]);
+				
+				data[12] = attList.get(12).valueOf(attributes[13]);
+				data[13] = attList.get(13).valueOf(attributes[14]);
+				
+				// No se guarda el atributo Clientes : attributes[15]
+				
+				data[14] = attList.get(14).valueOf(attributes[16]);
+				data[15] = attList.get(15).valueOf(attributes[17]);
+				data[16] = attList.get(16).valueOf(attributes[18]);
+				data[17] = attList.get(17).valueOf(attributes[19]);
+				
+				// Ventas
+				data[18] = Double.valueOf(attributes[20]);
+			}
+		} catch (Exception e) {
+			System.out.println("TROUBLES HERE !");
+			System.out.println(e.getMessage());
+		}
+		return data;
+	}
+	
+	public static double[][] modifyListAttributes(List<Attribute> attributesList, int[] attributesToKeep, double[][] data){
 		List<Attribute> newList = new ArrayList<Attribute>();
-		if (attributesList.size() == attributesToKeep.length){
+		if (attributesList.size() == attributesToKeep.length-1){
 			// Creating a new list with attributes to keep
-			for (int i=0; i< attributesToKeep.length; i++){
+			for (int i=0; i< attributesToKeep.length-1; i++){
 				if (attributesToKeep[i] == 1){
 					newList.add(attributesList.get(i));
 				}
 			}
 			
 			// Keeping cols of data array associated to the attributes to keep
-			double[][] temp = new double[data.length][newList.size()];
+			double[][] temp = new double[data.length][newList.size()+1];
 			for(int row = 0; row < data.length; row++){
 				// column index of the new array
 				int index = 0;
@@ -156,16 +175,7 @@ public class Parser {
 					}
 				}
 			}
-			// Updating data array
-			data = null;
-			data = new double[temp.length][temp[0].length];
-			//data = temp;
-			for(int row = 0; row < data.length; row++){
-				for(int col = 0; col < data[0].length; col++){
-					data[row][col] = temp[row][col];
-				}
-			}
-			
+
 			// Updating attributes ID
 			for (int i=0; i< newList.size(); i++){
 				Attribute att = newList.get(i);
@@ -176,9 +186,9 @@ public class Parser {
 			attributesList.clear();
 			attributesList.addAll(newList);
 			
-			return true;
+			return temp;
 		} else {
-			return false;
+			return data;
 		}
 	}
 }

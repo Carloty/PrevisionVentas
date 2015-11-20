@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import trees.RegressionTree;
@@ -54,12 +55,19 @@ public class Main {
 			/*
 			 * Test import data
 			 */
-			double[][] dataCSV = Parser.getDataFromSCVFile("age_pr2_without.csv");
-			System.out.println("Number of instances :" + dataCSV.length);
-			System.out.println("Number of attributes :" + (dataCSV[0].length-1));
+			double[][] dataCSV = Parser.getDataFromFile("age_pr2_without.csv");
+			List<Attribute> l = Parser.getAllAttributes();
+			
+			/*
+			 * Test choosing attributes
+			 */
+			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);
+			
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			System.out.println("WRONG MAIN");
 		}
 
 		
