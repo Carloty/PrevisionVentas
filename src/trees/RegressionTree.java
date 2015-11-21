@@ -8,8 +8,9 @@ import trees.attributes.DateAttribute;
 import trees.attributes.NominalAttribute;
 import trees.attributes.NumericalAttribute;
 
-/*
+/**
  * Represents a regression tree, supported for genetic programming
+ *
  */
 public class RegressionTree {
 	
@@ -20,13 +21,24 @@ public class RegressionTree {
 	// Maximum depth of the tree
 	private int depth = 0;
 	
-	// Random constructor for a tree using a list of attributes and a maximum depth
+	/**
+	 * Constructor of a RegressionTree
+	 * @param attributes 
+	 * 		List of Attribute that the data will contain
+	 * @param depthMax
+	 * 		Max depth of the tree
+	 */
 	public RegressionTree(List<Attribute> attributes, int depthMax) {
 		setAttributes(attributes);
 		setDepth(depthMax);
 		setRoot(randomInitialization(depthMax));
 	}
 
+	/**
+	 * Constructor of a RegressionTree
+	 * @param root
+	 * 		The node to be set as the root of the tree
+	 */
 	public RegressionTree(Node root) {
         setRoot(root);
 	}
@@ -50,8 +62,12 @@ public class RegressionTree {
 		this.root = root;
 	}
 	
-	/*
-	 *  Predict a value for the data (output value of the ultimate leaf reached)
+	/**
+	 * Predict a value for the data
+	 * @param data
+	 * 		The entry to predict. Each attribute has a double value.
+	 * @return
+	 * 		The double output value of the ultimate leaf reached in the tree
 	 */
 	public double predict(double[] data) {
 		return root.predict(data);
@@ -60,16 +76,18 @@ public class RegressionTree {
 	/*
 	 * Recursively build a regression tree. 
 	 * If the depth is 1, the method returns a leaf node containing a random output value
+	 * Else, a leaf node is created with a probability of 0.3
 	 * Else, for each node, an attribute is randomly selected.
 	 * For Numerical or Date attribute, the split value for the node is randomly selected within the range defined for the attribute
 	 * (see attributes constructors)
 	 */
 	private Node randomInitialization(int depth) {
+		double probabilityLeafNode = 0.3;
 		Node root;
-		if (depth == 1) {
+		Random r = new Random();
+		if (depth == 1 || r.nextDouble() <= probabilityLeafNode) {
 			return new Node();			
 		} else {
-			Random r = new Random();
 			int attributeId = r.nextInt(attributes.size());
 			Attribute attribute = attributes.get(attributeId);
 			
@@ -110,7 +128,7 @@ public class RegressionTree {
 	 * @param data
 	 * 		Data to predict, in an array of doubles, one line per data to predict
 	 * @return
-	 * 		The fitness of this tree (mean of the commeted errors)
+	 * 		The fitness of this tree (mean of the committed errors)
 	 */
 	public double getFitness(double[][] data){
 		double fitness = 0;
