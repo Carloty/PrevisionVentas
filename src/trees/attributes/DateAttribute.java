@@ -22,13 +22,13 @@ public class DateAttribute extends Attribute {
 	
 	/**
 	 * The earliest possible date
-	 * (initialize at 01/01/1800 in constructor)
+	 * (initialize at 01/01/2000 in constructor)
 	 */
 	public final double earliest;
 	
 	/**
 	 * The latest possible date
-	 * (initialize at 01/01/2500 in constructor)
+	 * (initialize at 01/01/2020 in constructor)
 	 */
 	public final double latest;
 
@@ -67,8 +67,8 @@ public class DateAttribute extends Attribute {
 	public DateAttribute(String name, String description, AttributeType type, String format, int id, boolean nullPossible) throws ParseException {
 		super(name, description, type, id, nullPossible);
 		this.setFormat(format);
-		earliest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("1800-01-01"));
-		latest = valueOf(new SimpleDateFormat("yyyy-MM-dd").parse("2500-01-01"));
+		earliest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01"));
+		latest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01"));
 	}
 
 	public DateFormat getFormat() {
@@ -102,7 +102,7 @@ public class DateAttribute extends Attribute {
      * Returns the double value representation of a Date.
      */
     public double valueOf(Date date) {
-        return Double.longBitsToDouble(date.getTime());
+        return hoursSince2010(date);
     }
     
     /**
@@ -112,11 +112,38 @@ public class DateAttribute extends Attribute {
     public double valueOf(String s) throws ParseException {
     	if (!s.equals("")){
     		Date d = format.parse(s);
-            return Double.longBitsToDouble(d.getTime());
+            return hoursSince2010(d);
     	} else {
     		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
     	}
         
+    }
+    
+    public String doubleToDate(double d){
+    	if (d != Double.NEGATIVE_INFINITY){
+    		try {
+	    		long reference = (new SimpleDateFormat("yyyy-MM-dd").parse("2010-01-01")).getTime()/(3600*1000);
+	    		long diff = (long)d;
+	    		long date = diff + reference;
+	    		Date correspondingDate = new Date(date*3600*1000);
+	    		return toString(correspondingDate);
+    		} catch (Exception e){
+    			System.out.println("Troubles in doubleToDate in DateAttribute");
+    		}
+    	}
+    	return "null";        
+    }
+    
+    private double hoursSince2010(Date d) {
+    	try {
+	    	long reference = (new SimpleDateFormat("yyyy-MM-dd").parse("2010-01-01")).getTime()/(3600*1000);
+	    	long dateSince1970 = d.getTime()/(3600*1000);
+	    	long diff = dateSince1970 - reference;
+	    	return (new Long(diff)).doubleValue();
+    	} catch (Exception e){
+    		System.out.println("Troubles in hoursSince2010 in DateAttribute");
+    	}
+    	return Double.NaN;
     }
 
 }
