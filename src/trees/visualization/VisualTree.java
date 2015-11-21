@@ -62,7 +62,11 @@ public class VisualTree extends JFrame {
 				List<Node> children = node.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					childV = addVisualNode(nodeV, children.get(i), i*2);
-					graph.insertEdge(nodeV, null, splitValues[i], nodeV, childV);
+					if (i==children.size()-1 && at.isNullValuePossible()){
+						graph.insertEdge(nodeV, null, "null", nodeV, childV);
+					} else {
+						graph.insertEdge(nodeV, null, splitValues[i], nodeV, childV);
+					}
 				}
 			} else {
 				Object childL, childR;
@@ -71,6 +75,10 @@ public class VisualTree extends JFrame {
 				childR = addVisualNode(nodeV, children.get(1), 2);
 				graph.insertEdge(nodeV, null, "<= " + node.getSplitValue(), nodeV, childL);
 				graph.insertEdge(nodeV, null, "> " + node.getSplitValue(), nodeV, childR);
+				if (attribute.isNullValuePossible()){
+					Object childNull = addVisualNode(nodeV, children.get(2), 4);
+					graph.insertEdge(nodeV, null, "null", nodeV, childNull);
+				}
 			}
 		}
 		return nodeV;
