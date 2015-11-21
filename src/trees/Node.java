@@ -22,7 +22,7 @@ public class Node {
     private Attribute attribute = null;
     // If the attribute that is tested is Numerical or Date, the node contains the split value and the node only has two children
     private double splitValue = 0.0;
-    // If the node is a leaf, its the predicted value
+	// If the node is a leaf, its the predicted value
     private double output = 0.0;
     
     // Constructor for a leaf node
@@ -74,10 +74,18 @@ public class Node {
 		this.output = output;
 	}
     
-    private double getOutput() {
+    public double getOutput() {
     	return this.output;
     }
 
+    public double getSplitValue() {
+		return splitValue;
+	}
+
+	public void setSplitValue(double splitValue) {
+		this.splitValue = splitValue;
+	}
+	
     public boolean isRoot() {
         return (this.parent == null);
     }

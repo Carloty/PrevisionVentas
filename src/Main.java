@@ -8,6 +8,7 @@ import trees.attributes.Attribute;
 import trees.attributes.DateAttribute;
 import trees.attributes.NominalAttribute;
 import trees.attributes.NumericalAttribute;
+import trees.visualization.VisualTree;
 
 public class Main {
 
@@ -38,13 +39,18 @@ public class Main {
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
 			 */
-			RegressionTree tree = new RegressionTree(attributes, 10);
+			RegressionTree tree = new RegressionTree(attributes,10);
 			
 			/*
 			 * Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
 			 */
 			double[] data = {Double.longBitsToDouble(new SimpleDateFormat("yyyy-MM-dd").parse("1992-10-09").getTime()), 2, 0};
 			
+			/*
+			 * Visualize the tree in a new frame
+			 */
+			VisualTree treeV = new VisualTree(tree);
+			treeV.printTree();
 			
 			/*
 			 * Printout the value predicted by the tree (value of the ultimate leaf reached) 
@@ -76,7 +82,6 @@ public class Main {
 			System.out.println("WRONG MAIN");
 		}
 
-		
 
 	}
 
