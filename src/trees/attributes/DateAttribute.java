@@ -119,6 +119,9 @@ public class DateAttribute extends Attribute {
         
     }
     
+    /**
+     * Get the date in String format associated to this double
+     */
     public String doubleToDate(double d){
     	if (d != Double.NEGATIVE_INFINITY){
     		try {
@@ -134,6 +137,14 @@ public class DateAttribute extends Attribute {
     	return "null";        
     }
     
+    /**
+     * Calculate the number of hours since 01/01/2010
+     * 
+     * @param d
+     * 		A date
+     * @return
+     * 		Number of hours in double format
+     */
     private double hoursSince2010(Date d) {
     	try {
 	    	long reference = (new SimpleDateFormat("yyyy-MM-dd").parse("2010-01-01")).getTime()/(3600*1000);

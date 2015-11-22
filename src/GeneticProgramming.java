@@ -86,7 +86,7 @@ public class GeneticProgramming {
 
 		// Asignación del fitness por ranking
 		for (int i = 0; i < tamano; i++) {
-			evaluacion[i] = individuos.get(i).getFitness(data);
+			evaluacion[i] = (-1)*individuos.get(i).getFitness(data);
 		}
 		fitness = GeneticProgramming.getFitnessConRango(presionSelectiva, GeneticProgramming.getRangoConEvaluacion(evaluacion));
 		return fitness;
@@ -96,7 +96,7 @@ public class GeneticProgramming {
 		int tamano = individuos.size();
 		double[] fitness = new double[tamano];
 		for (int i = 0; i < tamano; i++) {
-			fitness[i] = individuos.get(i).getFitness(data);
+			fitness[i] = (-1)*individuos.get(i).getFitness(data);
 		}
 		return fitness;		
 	}

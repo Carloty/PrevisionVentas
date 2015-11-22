@@ -27,14 +27,14 @@ public class Main {
 			List<Attribute> attributes = new ArrayList<Attribute>();
 			
 			// The first available type is Date. The Date may correspond to a format supported by Java
-			attributes.add(new DateAttribute("Date", Attribute.AttributeType.DATE, "yyyy-MM-dd", 0, false));
+			attributes.add(new DateAttribute("Date", Attribute.AttributeType.DATE, "yyyy-MM-dd", 0, true));
 			
 			// The second available type is Nominal. The attribute may take its values within a set of defined strings
 			String[] nominalValues = {"OUI", "NON", "JE NE SAIS PAS"};
-			attributes.add(new NominalAttribute("Attribut Nominal", Attribute.AttributeType.NOMINAL, nominalValues, 1, false));
+			attributes.add(new NominalAttribute("Attribut Nominal", Attribute.AttributeType.NOMINAL, nominalValues, 1, true));
 			
 			// The last type is Numeric. It corresponds to doubles. The attributes may take its values within a range specified with the constructor
-			attributes.add(new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -10, 10.5, false));
+			attributes.add(new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -10, 10.5, true));
 			
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
@@ -71,12 +71,26 @@ public class Main {
 			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);*/
 			
 			/*
-			 * Test RegressionTree.getFitness
+			 * Test Selection
 			 */
-			RegressionTree treeBis = new RegressionTree(l, 3);
+			// Creating a list of trees
+			List<RegressionTree> forest = new ArrayList<RegressionTree>();
+			for (int i = 0; i < 10 ; i++){
+				forest.add(new RegressionTree(l, 4));
+			}
+			// Data selected to evaluate fitness
 			double[][] test = Parser.getNSamples(10, dataCSV);
 			
-			System.out.println("Fitness with 10 samples : "+treeBis.getFitness(test));			
+			// Print fitness of each tree
+			for (int i = 0; i < forest.size() ; i++){
+				System.out.println(i+" : "+forest.get(i).getFitness(test));
+			}
+			
+			// Print selected indices
+			List<Integer> indices = GeneticProgramming.selection(forest, 5, test);
+			for (int i=0 ; i<indices.size() ; i++){
+				System.out.println("selected : "+indices.get(i));
+			}
 			
 		} catch (Exception e) {
 			System.out.println("WRONG MAIN");
