@@ -1,6 +1,5 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import trees.RegressionTree;
@@ -39,7 +38,7 @@ public class Main {
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
 			 */
-			RegressionTree tree = new RegressionTree(attributes,10);
+			RegressionTree tree = new RegressionTree(attributes,5);
 			
 			/*
 			 * Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
@@ -57,6 +56,12 @@ public class Main {
 			 */
 			System.out.println(tree.predict(data));
 			
+			/*
+			 * Test for the copy of the tree
+			 */
+			RegressionTree copy = tree.copy();
+			VisualTree treeC = new VisualTree(copy);
+			treeC.printTree();			
 			
 			/*
 			 * Test import data
@@ -90,10 +95,29 @@ public class Main {
 			List<Integer> indices = GeneticProgramming.selection(forest, 5, test);
 			for (int i=0 ; i<indices.size() ; i++){
 				System.out.println("selected : "+indices.get(i));
+			}	
+			
+			/*
+			 * Test combination
+			 */
+			RegressionTree father, mother;
+			father = new RegressionTree(attributes, 3);
+			mother = new RegressionTree(attributes, 3);
+			
+			List<RegressionTree> children = GeneticProgramming.combination(father, mother);
+			
+			VisualTree fatherV, motherV, childV;
+			fatherV = new VisualTree(father);
+			fatherV.printTree();
+			motherV = new VisualTree(mother);
+			motherV.printTree();
+			for (RegressionTree child : children) {
+				childV = new VisualTree(child);
+				childV.printTree();
 			}
 			
 		} catch (Exception e) {
-			System.out.println("WRONG MAIN");
+			e.printStackTrace();
 		}
 
 
