@@ -44,6 +44,10 @@ public class Node {
     public List<Node> getChildren() {
         return children;
     }
+    
+    public Node getParent() {
+    	return this.parent;
+    }
 
     public void setParent(Node parent) {
         this.parent = parent;
@@ -60,6 +64,18 @@ public class Node {
     public void addChild(Node child) {
         child.setParent(this);
         this.children.add(child);
+    }
+    
+    public void addChild(Node child, int index) {
+    	child.setParent(this);
+    	this.children.add(index, child);
+    }
+    
+    public int removeChild(Node child) {
+    	int i = children.indexOf(child);
+    	this.children.remove(child);
+    	child.setParent(null);
+    	return i;
     }
 
     public Attribute getAttribute() {
@@ -135,6 +151,31 @@ public class Node {
 				} 
 			}
 		}
+	}
+
+	public void getNodes(List<Node> nodeList) {
+		nodeList.add(this);
+		if (!this.isLeaf()) {
+			for (Node child : this.getChildren()) {
+				child.getNodes(nodeList);
+			}				
+		}	
+	}
+
+	public Node copy() {
+		Node copy;
+		
+		if (this.isLeaf()) {
+			copy = new Node();
+			copy.setOutput(this.getOutput());
+		} else {
+			copy = new Node(this.getAttribute());
+			copy.setSplitValue(this.getSplitValue());
+			for (Node child : this.getChildren()) {
+				copy.addChild(child.copy());
+			}
+		}
+		return copy;
 	}
 
 }

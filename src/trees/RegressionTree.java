@@ -1,5 +1,6 @@
 package trees;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -60,7 +61,25 @@ public class RegressionTree {
 	}
 	public void setRoot(Node root) {
 		this.root = root;
+		root.setParent(null);
 	}
+	
+	public List<Node> getAllNodes() {
+		List<Node> nodeList = new ArrayList<Node>();
+		this.getRoot().getNodes(nodeList);
+		return nodeList;		
+	}
+	
+    public RegressionTree copy() {
+        Node root = this.getRoot();
+        
+        if (root == null) {
+            return new RegressionTree(null);
+        } else {
+            return new RegressionTree(root.copy());
+        }
+    }
+	
 	
 	/**
 	 * Predict a value for the data
