@@ -30,8 +30,8 @@ public class VisualTree extends JFrame {
 	 * @param tree 
 	 * 		RegressionTree to be printed
 	 */
-	public VisualTree(RegressionTree tree) {
-		super("Regression tree");
+	public VisualTree(String frameTitle, RegressionTree tree) {
+		super(frameTitle);
 		int width = 0;
 
 		graph = new mxGraph();

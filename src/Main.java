@@ -48,7 +48,7 @@ public class Main {
 			/*
 			 * Visualize the tree in a new frame
 			 */
-			VisualTree treeV = new VisualTree(tree);
+			VisualTree treeV = new VisualTree("Regression tree", tree);
 			treeV.printTree();
 			
 			/*
@@ -60,7 +60,7 @@ public class Main {
 			 * Test for the copy of the tree
 			 */
 			RegressionTree copy = tree.copy();
-			VisualTree treeC = new VisualTree(copy);
+			VisualTree treeC = new VisualTree("Copy", copy);
 			treeC.printTree();			
 			
 			/*
@@ -107,12 +107,12 @@ public class Main {
 			List<RegressionTree> children = GeneticProgramming.combination(father, mother);
 			
 			VisualTree fatherV, motherV, childV;
-			fatherV = new VisualTree(father);
+			fatherV = new VisualTree("Father tree", father);
 			fatherV.printTree();
-			motherV = new VisualTree(mother);
+			motherV = new VisualTree("Mother tree", mother);
 			motherV.printTree();
 			for (RegressionTree child : children) {
-				childV = new VisualTree(child);
+				childV = new VisualTree("Children trees", child);
 				childV.printTree();
 			}
 			
