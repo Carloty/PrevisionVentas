@@ -25,6 +25,8 @@ public class Node {
 	// If the node is a leaf, its the predicted value
     private double output = 0.0;
     
+    private int depth = 1;
+    
     // Constructor for a leaf node
     public Node() {
     	setOutput(Math.random() * MAX_SALES);
@@ -102,6 +104,23 @@ public class Node {
 		this.splitValue = splitValue;
 	}
 	
+	public int getDepth() {
+		return depth;
+	}
+	
+	public void setDepth() {
+		if (this.isRoot()) {
+			this.depth = 1;
+		} else {
+			this.depth = this.getParent().getDepth()+1;
+		}
+		if (!this.isLeaf()) {
+			for (Node child : this.getChildren()) {
+				child.setDepth();
+			}
+		}
+	}
+	
     public boolean isRoot() {
         return (this.parent == null);
     }
@@ -152,7 +171,11 @@ public class Node {
 			}
 		}
 	}
-
+	
+	/**
+	 * Add the nodes of the subtree
+	 * @param nodeList The list in which add the nodes
+	 */
 	public void getNodes(List<Node> nodeList) {
 		nodeList.add(this);
 		if (!this.isLeaf()) {
@@ -162,6 +185,10 @@ public class Node {
 		}	
 	}
 
+	/**
+	 * Deep copy the node and its subtree
+	 * @return The copy of the subtree which root is the current node
+	 */
 	public Node copy() {
 		Node copy;
 		
@@ -176,6 +203,22 @@ public class Node {
 			}
 		}
 		return copy;
+	}
+	
+	/**
+	 * Get the height (number of levels) of the subtree which root is the current node
+	 * @return Height of the subtree
+	 */
+	public int getHeigthSubTree() {
+		List<Node> subTree = new ArrayList<Node>();
+		this.getNodes(subTree);
+		int max = this.getDepth();
+		for (Node node : subTree) {
+			if (node.getDepth() > max) {
+				max = node.getDepth();
+			}
+		}
+		return max - this.getDepth() + 1;
 	}
 
 }
