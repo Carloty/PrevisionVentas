@@ -55,8 +55,14 @@ public class GeneticProgramming {
 		// Randomly select a node in each tree
 		List<Node> nodesDes1 = des1.getAllNodes();
 		Node node1 = nodesDes1.get(r.nextInt(nodesDes1.size()));
+		
+		// Control the selection of the second node
 		List<Node> nodesDes2 = des2.getAllNodes();
-		Node node2 = nodesDes2.get(r.nextInt(nodesDes2.size()));
+		Node node2;
+		do {
+			node2 = nodesDes2.get(r.nextInt(nodesDes2.size()));
+		} while (node2.getHeigthSubTree() > father.getDepth() - node1.getDepth() + 1);
+		
 		
 		Node parentNode1 = null;
 		Node parentNode2 = null;
@@ -82,6 +88,10 @@ public class GeneticProgramming {
 				des1.setRoot(node2);
 			}
 		}
+		// Update the depth of the nodes
+		node1.setDepth();
+		node2.setDepth();
+		
 		descendents.add(des1);
 		descendents.add(des2);
 		return descendents;
