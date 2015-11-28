@@ -186,4 +186,29 @@ public class GeneticProgramming {
 		return fitness;		
 	}
 
+
+	
+	/**
+	 * Mutation phase
+	 * 
+	 * @param trees
+	 * 		Inicial population to mutate
+	 * @param mutationProbability
+	 * 		Mutation probability
+	 * @return
+	 * 		A list representing the new population after the mutation phase
+	 */
+	public static List<RegressionTree> mutation(List<RegressionTree> trees, double mutationProbability){
+		List<RegressionTree> populationAfterMuntation = new ArrayList<RegressionTree>();
+		Random r = new Random();
+		double valor;
+		
+		for (RegressionTree tree : trees){
+			// Obtenir tous les noeuds et générer nombre aléatoire pour chacun ?
+			// Muter si ce nombre est inférieur à mutationProbability (valeur de mutation differente selon le type de mutation ?
+			valor = r.nextDouble();
+		}
+		
+		return populationAfterMuntation;
+	}
 }
