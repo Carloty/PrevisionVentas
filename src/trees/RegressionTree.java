@@ -21,6 +21,8 @@ public class RegressionTree {
 	private Node root = null;
 	// Maximum depth of the tree
 	private int depth = 0;
+	// Tree fitness
+	private double fitness = -1;
 	
 	/**
 	 * Constructor of a RegressionTree
@@ -56,6 +58,22 @@ public class RegressionTree {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
+	public double getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(double[][] data) {
+		double f = 0;
+		double error;
+		for (int i = 0; i < data.length; i++){
+			error = Math.abs(this.predict(data[i]) - data[i][data[i].length-1]);
+			f = f + error;
+		}
+		f = f/data.length;
+		
+		this.fitness = f;
+	}
+
 	public Node getRoot() {
 		return root;
 	}
@@ -150,13 +168,11 @@ public class RegressionTree {
 	 * 		The fitness of this tree (mean of the committed errors)
 	 */
 	public double getFitness(double[][] data){
-		double fitness = 0;
-		double error;
-		for (int i = 0; i < data.length; i++){
-			error = Math.abs(this.predict(data[i]) - data[i][data[i].length-1]);
-			fitness = fitness + error;
+		// if fitness was never inicialized
+		if (this.fitness == -1){
+			setFitness(data);
 		}
-		
-		return fitness/data.length;
+		// return fitness value
+		return getFitness();
 	}
 }
