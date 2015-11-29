@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import trees.Node;
 import trees.RegressionTree;
 import trees.attributes.Attribute;
 import trees.attributes.DateAttribute;
@@ -33,7 +34,7 @@ public class Test {
 			attributes.add(new NominalAttribute("Attribut Nominal", Attribute.AttributeType.NOMINAL, nominalValues, 1, true));
 			
 			// The last type is Numeric. It corresponds to doubles. The attributes may take its values within a range specified with the constructor
-			attributes.add(new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -10, 10.5, true));
+			attributes.add(new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -100, 100, true));
 			
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
@@ -41,43 +42,35 @@ public class Test {
 			RegressionTree tree = new RegressionTree(attributes,5);
 			
 			/*
-			 * Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
-			 */
+			// Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
 			double[] data = {Double.longBitsToDouble(new SimpleDateFormat("yyyy-MM-dd").parse("1992-10-09").getTime()), 2, 0};
 			
-			/*
-			 * Visualize the tree in a new frame
-			 */
+			
+			// Visualize the tree in a new frame
 			VisualTree treeV = new VisualTree("Regression tree", tree);
 			treeV.printTree();
 			
-			/*
-			 * Printout the value predicted by the tree (value of the ultimate leaf reached) 
-			 */
+			
+			// Printout the value predicted by the tree (value of the ultimate leaf reached) 
 			System.out.println(tree.predict(data));
 			
-			/*
-			 * Test for the copy of the tree
-			 */
+			
+			// Test for the copy of the tree
 			RegressionTree copy = tree.copy();
 			VisualTree treeC = new VisualTree("Copy", copy);
 			treeC.printTree();			
 			
-			/*
-			 * Test import data
-			 */
+			// Test import data
 			double[][] dataCSV = Parser.getDataFromFile("age_pr2_without.csv");
 			List<Attribute> l = Parser.getAllAttributes();
 			
-			/*
-			 * Test choosing attributes
-			 */
-			/*int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
-			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);*/
+			// Test choosing attributes
+			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);
 			
-			/*
-			 * Test Selection
-			 */
+			
+			// Test Selection
+			
 			// Creating a list of trees
 			List<RegressionTree> forest = new ArrayList<RegressionTree>();
 			for (int i = 0; i < 10 ; i++){
@@ -97,9 +90,8 @@ public class Test {
 				System.out.println("selected : "+indices.get(i));
 			}	
 			
-			/*
-			 * Test combination
-			 */
+			
+			//Test combination
 			RegressionTree father, mother;
 			father = new RegressionTree(attributes, 3);
 			mother = new RegressionTree(attributes, 3);
@@ -115,6 +107,24 @@ public class Test {
 				childV = new VisualTree("Children trees", child);
 				childV.printTree();
 			}
+			
+			// Test getDepth
+			List<Node> nodes = tree.getAllNodes();
+			for (Node node : nodes) {
+				System.out.println("Profondeur noeud = " + node.getDepth());
+			}
+			
+			
+			// Test mutation
+			VisualTree treeV = new VisualTree("Before Mutation", tree);
+			treeV.printTree();
+			
+			List<RegressionTree> trees = new ArrayList<>();
+			trees.add(tree);
+			GeneticProgramming.mutation(trees, 0.5);
+			VisualTree treeVAfter = new VisualTree("After Mutation", trees.get(0));
+			treeVAfter.printTree();	
+			*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

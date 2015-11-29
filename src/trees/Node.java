@@ -35,7 +35,7 @@ public class Node {
     // Constructor for a Nominal attribute (the split values correspond to the available values of the attribute)
 	public Node(Attribute attribute) {
         this.attribute = attribute;
-    }
+	}
 
 	// Constructor for a Numerical or Date attribute
     public Node(Attribute attribute, double splitValue) {
@@ -53,6 +53,7 @@ public class Node {
 
     public void setParent(Node parent) {
         this.parent = parent;
+        setDepth();
     }
 
     /*
@@ -88,7 +89,7 @@ public class Node {
         this.attribute = attribute;
     }
 
-    private void setOutput(double output) {
+    public void setOutput(double output) {
 		this.output = output;
 	}
     
