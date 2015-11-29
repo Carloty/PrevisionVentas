@@ -10,24 +10,27 @@ public class GeneticProgramming {
 	/**
 	 * Combine a population of regression trees to obtain a new population of the same size
 	 * The combination is made by randomly selecting a node in each tree of the couple and swapping them
-	 * @param trees All the population of trees
-	 * @param fitests The indices of the trees in the mating pool
-	 * @return List of all the children get by combination of the trees in the mating pool
+	 * @param trees 
+	 * 		All the population of trees
+	 * @param fittest 
+	 *		Indices of the trees in the mating pool
+	 * @return 
+	 * 		List of all the children get by combination of the trees in the mating pool
 	 */
-	public static List<RegressionTree> combination(List<RegressionTree> trees, List<Integer> fitests) {
+	public static List<RegressionTree> combination(List<RegressionTree> trees, List<Integer> fittest) {
 		RegressionTree father, mother;
 		List<RegressionTree> children = new ArrayList<RegressionTree>();
-		int popSize = fitests.size();
+		int popSize = fittest.size();
 		Random r = new Random();
 		int indice;
 		
 		// Do the mating
 		for (int i = 0; i < popSize / 2; i++) {
 			// Select two trees and delete them from the list
-			indice = r.nextInt(fitests.size());
-			father = trees.get(fitests.remove(indice));
-			indice = r.nextInt(fitests.size());
-			mother = trees.get(fitests.remove(indice));
+			indice = r.nextInt(fittest.size());
+			father = trees.get(fittest.remove(indice));
+			indice = r.nextInt(fittest.size());
+			mother = trees.get(fittest.remove(indice));
 			// Combine the two trees to get to children
 			children.addAll(combination(father,mother));
 		}
@@ -35,13 +38,16 @@ public class GeneticProgramming {
 	}
 	
 	
-	/**
+	/*
 	 * Combine two regression trees by swapping two nodes randomly selected
 	 * @param father The first regression tree
 	 * @param mother The second regression tree
 	 * @return A list containing the two children created by the swapping
 	 */
 	public static List<RegressionTree> combination(RegressionTree father, RegressionTree mother) {
+		/*
+		 TODO change to private 
+		 */
 		List<RegressionTree> descendents = new ArrayList<RegressionTree>();
 		RegressionTree des1, des2;
 		int index1 = -1;
@@ -97,118 +103,125 @@ public class GeneticProgramming {
 		return descendents;
 	}
 	
+	/**
+	 * Select the fittest thanks to roulette method
+	 * @param population 
+	 * 		List of the initial regression trees
+	 * @param selectivePressure 
+	 * 		Selective pressure
+	 * @param data 
+	 * 		Data to compute the evaluation of each one of the trees
+	 * @return 
+	 * 		Indexes of the selected regression trees
+	 */
 	public static List<Integer> selection(List<RegressionTree> population, double selectivePressure, double[][] data){
-		return ruleta(asignacionFitnessPorRango(population,selectivePressure, data));		
+		return roulette(fitnessAssignmentFromRank(population,selectivePressure, data));		
 	}
 	
-	public static List<Integer> ruleta(double[] fitness) {
-		int tamano = fitness.length;
-		List<Integer> indicesMejores = new ArrayList<Integer>(0);
+	private static List<Integer> roulette(double[] fitness) {
+		int populationSize = fitness.length;
+		List<Integer> fittestIndexes = new ArrayList<Integer>(0);
 		
-		// Calcular el total del fitness
+		// Compute the sum of the fitness
 		double fitnessTotal = 0;
-		for (int i = 0; i < tamano; i++) {
+		for (int i = 0; i < populationSize; i++) {
 			fitnessTotal += fitness[i];
 		}
 		
-		// Calcular las probabilidades acumuladas
-		double[] probas = new double[tamano];
+		// Compute accumulated probabilities
+		double[] probas = new double[populationSize];
 		probas[0] = fitness[0] / fitnessTotal;
-		for (int i = 1; i < tamano - 1; i++) {
+		for (int i = 1; i < populationSize - 1; i++) {
 			probas[i] = probas[i-1] + fitness[i] / fitnessTotal;
-			//System.out.println("Proba cumulï¿½e pour indiv " + i + " : " + probas[i]);
 		}
-		probas[tamano-1] = 1;
+		probas[populationSize-1] = 1;
 		
-		// Selecionar los individuos
+		// Select the fittest individuals
 		Random r = new Random();
-		double valor;
-		for (int i = 0; i < tamano; i++) {
-			valor = r.nextDouble();
-			for (int j = 0; j < tamano; j++) {
-				if (valor < probas[j]) {
-					indicesMejores.add(j);
+		double randDouble;
+		for (int i = 0; i < populationSize; i++) {
+			randDouble = r.nextDouble();
+			for (int j = 0; j < populationSize; j++) {
+				if (randDouble < probas[j]) {
+					fittestIndexes.add(j);
 					break;
 				}
 			}			
 		}
-		
-		return indicesMejores;
+		return fittestIndexes;
 	}
 	
-	public static int[] getRangoConEvaluacion(double[] evaluacion) {
-		int tamano = evaluacion.length;
-		int[] ranks = new int[tamano];
+	private static int[] getRankFromEvaluation(double[] evaluation) {
+		int populationSize = evaluation.length;
+		int[] ranks = new int[populationSize];
 		
-		// Calcular el rango de los individuos
-				for (int i = 0; i < tamano; i++) {
-					ranks[i] = 0;
-					for (int j = 0; j < tamano; j++) {
-						if (i != j && evaluacion[i] >= evaluacion[j]) {
-							ranks[i]++;
-						}
-					}
+		// Compute the rank of the individuals
+		for (int i = 0; i < populationSize; i++) {
+			ranks[i] = 0;
+			for (int j = 0; j < populationSize; j++) {
+				if (i != j && evaluation[i] >= evaluation[j]) {
 					ranks[i]++;
 				}
+			}
+			ranks[i]++;
+		}
 		return ranks;
 	}
  	
-	public static double[] getFitnessConRango(double presionSelectiva, int[] ranks) {
-		int tamano = ranks.length;
-		double[] fitness = new double[tamano];
+	private static double[] getFitnessFromRank(double selectivePressure, int[] ranks) {
+		int populationSize = ranks.length;
+		double[] fitness = new double[populationSize];
 		
-		// Calcular el fitness
-		for (int i = 0; i < tamano; i++) {
-			fitness[i] = 2-presionSelectiva + 2*(presionSelectiva-1)*(ranks[i]-1)/(tamano-1);
+		// Compute the fitness
+		for (int i = 0; i < populationSize; i++) {
+			fitness[i] = 2-selectivePressure + 2*(selectivePressure-1)*(ranks[i]-1)/(populationSize-1);
 		}
 		return fitness;
 	}
 	
-	private static double[] asignacionFitnessPorRango(List<RegressionTree> individuos, double presionSelectiva, double[][] data) {
-		int tamano = individuos.size();
-		double[] evaluacion = new double[tamano];
-		double[] fitness = new double[tamano];
+	private static double[] fitnessAssignmentFromRank(List<RegressionTree> individuals, double selectivePressure, double[][] data) {
+		int populationSize = individuals.size();
+		double[] evaluation = new double[populationSize];
+		double[] fitness = new double[populationSize];
 
-		// Asignaciï¿½n del fitness por ranking
-		for (int i = 0; i < tamano; i++) {
-			evaluacion[i] = (-1)*individuos.get(i).getFitness(data);
+		// Fitness assignment from ranking
+		for (int i = 0; i < populationSize; i++) {
+			evaluation[i] = (-1)*individuals.get(i).getEvaluation(data);
 		}
-		fitness = GeneticProgramming.getFitnessConRango(presionSelectiva, GeneticProgramming.getRangoConEvaluacion(evaluacion));
+		fitness = GeneticProgramming.getFitnessFromRank(selectivePressure, GeneticProgramming.getRankFromEvaluation(evaluation));
 		return fitness;
 	}
 	
-	private static double[] asignacionFitnessProporcional(List<RegressionTree> individuos, double[][] data) {
-		int tamano = individuos.size();
-		double[] fitness = new double[tamano];
-		for (int i = 0; i < tamano; i++) {
-			fitness[i] = (-1)*individuos.get(i).getFitness(data);
+	private static double[] proportionalFitnessAssignment(List<RegressionTree> individuals, double[][] data) {
+		int populationSize = individuals.size();
+		double[] fitness = new double[populationSize];
+		for (int i = 0; i < populationSize; i++) {
+			fitness[i] = (-1)*individuals.get(i).getEvaluation(data);
 		}
 		return fitness;		
 	}
-
-
 	
 	/**
 	 * Mutation phase
 	 * 
 	 * @param trees
-	 * 		Inicial population to mutate
+	 * 		Initial population to mutate
 	 * @param mutationProbability
 	 * 		Mutation probability
 	 * @return
 	 * 		A list representing the new population after the mutation phase
 	 */
 	public static List<RegressionTree> mutation(List<RegressionTree> trees, double mutationProbability){
-		List<RegressionTree> populationAfterMuntation = new ArrayList<RegressionTree>();
+		List<RegressionTree> populationAfterMutation = new ArrayList<RegressionTree>();
 		Random r = new Random();
-		double valor;
+		double randDouble;
 		
 		for (RegressionTree tree : trees){
-			// Obtenir tous les noeuds et générer nombre aléatoire pour chacun ?
-			// Muter si ce nombre est inférieur à mutationProbability (valeur de mutation differente selon le type de mutation ?
-			valor = r.nextDouble();
+			// Obtenir tous les noeuds et gï¿½nï¿½rer nombre alï¿½atoire pour chacun ?
+			// Muter si ce nombre est infï¿½rieur ï¿½ mutationProbability (valeur de mutation differente selon le type de mutation ?
+			randDouble = r.nextDouble();
 		}
 		
-		return populationAfterMuntation;
+		return populationAfterMutation;
 	}
 }

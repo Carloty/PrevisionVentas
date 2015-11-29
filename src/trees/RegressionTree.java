@@ -167,8 +167,8 @@ public class RegressionTree {
 	 * @return
 	 * 		The fitness of this tree (mean of the committed errors)
 	 */
-	public double getFitness(double[][] data){
-		// if fitness was never inicialized
+	public double getEvaluation(double[][] data){
+		// if fitness was never initialized
 		if (this.fitness == -1){
 			setFitness(data);
 		}

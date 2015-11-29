@@ -88,7 +88,7 @@ public class Test {
 			
 			// Print fitness of each tree
 			for (int i = 0; i < forest.size() ; i++){
-				System.out.println(i+" : "+forest.get(i).getFitness(test));
+				System.out.println(i+" : "+forest.get(i).getEvaluation(test));
 			}
 			
 			// Print selected indices
