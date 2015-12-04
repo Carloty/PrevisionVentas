@@ -141,6 +141,12 @@ public class GeneticProgramming {
 			probas[i] = probas[i - 1] + fitness[i] / fitnessTotal;
 		}
 		probas[populationSize - 1] = 1;
+		/*
+		System.out.println("Probas :");
+		for (int i = 0; i < populationSize; i++) {
+			System.out.println(probas[i]);
+		}
+		*/
 
 		// Select the fittest individuals
 		Random r = new Random();
@@ -149,6 +155,10 @@ public class GeneticProgramming {
 			randDouble = r.nextDouble();
 			for (int j = 0; j < populationSize; j++) {
 				if (randDouble < probas[j]) {
+					/*
+					System.out.println("Tiré au sort : " + randDouble);
+					System.out.println("Sélectionné : " + j);
+					*/
 					fittestIndexes.add(j);
 					break;
 				}
@@ -171,6 +181,12 @@ public class GeneticProgramming {
 			}
 			ranks[i]++;
 		}
+		/*
+		System.out.println("Ranks :");
+		for (int i = 0; i < populationSize; i++) {
+			System.out.println(ranks[i]);
+		}
+		*/
 		return ranks;
 	}
 
@@ -180,8 +196,14 @@ public class GeneticProgramming {
 
 		// Compute the fitness
 		for (int i = 0; i < populationSize; i++) {
-			fitness[i] = 2 - selectivePressure + 2 * (selectivePressure - 1) * (ranks[i] - 1) / (populationSize - 1);
+			fitness[i] = selectivePressure * (ranks[i] - 1) / (populationSize - 1);
 		}
+		/*
+		System.out.println("Fitness :");
+		for (int i = 0; i < populationSize; i++) {
+			System.out.println(fitness[i]);
+		}
+		*/
 		return fitness;
 	}
 
@@ -352,6 +374,10 @@ public class GeneticProgramming {
 	}
 	
 	public static List<RegressionTree> replacement(List<RegressionTree> initialPopulation, List<RegressionTree> children, double[][] data) {
+		System.out.println("Children");
+		for (RegressionTree child : children) {
+			System.out.println(child.getEvaluation(data));
+		}
 		List<RegressionTree> newPopulation;
 		int populationSize = initialPopulation.size();
 		children.addAll(initialPopulation);
