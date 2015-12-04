@@ -193,7 +193,7 @@ public class GeneticProgramming {
 
 		// Fitness assignment from ranking
 		for (int i = 0; i < populationSize; i++) {
-			evaluation[i] = (-1) * individuals.get(i).getEvaluation(data);
+			evaluation[i] = individuals.get(i).getEvaluation(data);
 		}
 		fitness = GeneticProgramming.getFitnessFromRank(selectivePressure,
 				GeneticProgramming.getRankFromEvaluation(evaluation));
@@ -349,5 +349,39 @@ public class GeneticProgramming {
 				nodes.remove(randInt);
 			}
 		}
+	}
+	
+	public static List<RegressionTree> replacement(List<RegressionTree> initialPopulation, List<RegressionTree> children, double[][] data) {
+		List<RegressionTree> newPopulation;
+		int populationSize = initialPopulation.size();
+		children.addAll(initialPopulation);
+		newPopulation = GeneticProgramming.getFittest(children, populationSize, data);
+		return newPopulation;
+	}
+
+	public static List<RegressionTree> getFittest(List<RegressionTree> population, int number, double[][] data) {
+		List<RegressionTree> fittest = new ArrayList<RegressionTree>();
+		int populationSize = population.size();
+		int[] ranks;
+		double[] evaluation = new double[populationSize];
+		int index = populationSize;
+
+		for (int i = 0; i < populationSize; i++) {
+			evaluation[i] = population.get(i).getEvaluation(data);
+		}
+		ranks = GeneticProgramming.getRankFromEvaluation(evaluation);
+		
+		while (fittest.size() < number && index > populationSize - number) {
+			for (int i = 0; i < populationSize; i++) {
+				if (ranks[i]  == index) {
+					fittest.add(population.get(i));
+				}
+				if (fittest.size() == number) {
+					break;
+				}
+			}
+			index--;
+		}
+		return fittest;
 	}
 }

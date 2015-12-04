@@ -42,7 +42,9 @@ public class RegressionTree {
 	 * @param root
 	 * 		The node to be set as the root of the tree
 	 */
-	public RegressionTree(Node root) {
+	public RegressionTree(List<Attribute> attributes, int depthMax, Node root) {
+		setAttributes(attributes);
+		setDepth(depthMax);
         setRoot(root);
 	}
 	
@@ -59,7 +61,7 @@ public class RegressionTree {
 		this.depth = depth;
 	}
 	public double getFitness() {
-		return fitness;
+		return - fitness;
 	}
 
 	public void setFitness(double[][] data) {
@@ -92,9 +94,9 @@ public class RegressionTree {
         Node root = this.getRoot();
         
         if (root == null) {
-            return new RegressionTree(null);
+            return new RegressionTree(this.getAttributes(), this.getDepth(), null);
         } else {
-            return new RegressionTree(root.copy());
+            return new RegressionTree(this.getAttributes(), this.getDepth(), root.copy());
         }
     }
 	
