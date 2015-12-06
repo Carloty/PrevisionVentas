@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import trees.Node;
@@ -24,28 +25,29 @@ public class Test {
 			 * First step : build the list of the available attributes
 			 * Each attribute has an id that says what's its position in the data
 			 */
-			List<Attribute> attributes = new ArrayList<Attribute>();
+			HashMap<Integer,Attribute> attributes = new HashMap<Integer,Attribute>();
 			
 			// The first available type is Date. The Date may correspond to a format supported by Java
-			attributes.add(new DateAttribute("Date", Attribute.AttributeType.DATE, "yyyy-MM-dd", 0, true));
+			DateAttribute dateAttr = new DateAttribute("Date", Attribute.AttributeType.DATE, "yyyy-MM-dd", 0, true);
+			attributes.put(0,dateAttr);
 			
 			// The second available type is Nominal. The attribute may take its values within a set of defined strings
 			String[] nominalValues = {"OUI", "NON", "JE NE SAIS PAS"};
-			attributes.add(new NominalAttribute("Attribut Nominal", Attribute.AttributeType.NOMINAL, nominalValues, 1, true));
+			attributes.put(1,new NominalAttribute("Attribut Nominal", Attribute.AttributeType.NOMINAL, nominalValues, 1, true));
 			
 			// The last type is Numeric. It corresponds to doubles. The attributes may take its values within a range specified with the constructor
-			attributes.add(new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -100, 100, true));
+			attributes.put(2,new NumericalAttribute("Attribut Numérique", Attribute.AttributeType.NUMERICAL, 2, -100, 100, true));
 			
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
 			 */
-			RegressionTree tree = new RegressionTree(attributes,5);
+			RegressionTree tree = new RegressionTree(attributes);
+			
+			
+			// Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
+			double[] data = {dateAttr.valueOf("1992-10-09"), 2, 0};
 			
 			/*
-			// Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
-			double[] data = {Double.longBitsToDouble(new SimpleDateFormat("yyyy-MM-dd").parse("1992-10-09").getTime()), 2, 0};
-			
-			
 			// Visualize the tree in a new frame
 			VisualTree treeV = new VisualTree("Regression tree", tree);
 			treeV.printTree();
@@ -112,9 +114,10 @@ public class Test {
 			List<Node> nodes = tree.getAllNodes();
 			for (Node node : nodes) {
 				System.out.println("Profondeur noeud = " + node.getDepth());
+				System.out.println("Attributs autorisés : " + node.getAllowedAttributes());
 			}
 			
-			
+			*/
 			// Test mutation
 			VisualTree treeV = new VisualTree("Before Mutation", tree);
 			treeV.printTree();
@@ -124,7 +127,11 @@ public class Test {
 			GeneticProgramming.mutation(trees, 0.5);
 			VisualTree treeVAfter = new VisualTree("After Mutation", trees.get(0));
 			treeVAfter.printTree();	
-			*/
+
+			VisualTree treeV2 = new VisualTree("Before Mutation 2", tree);
+			treeV2.printTree();
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

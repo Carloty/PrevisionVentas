@@ -12,7 +12,7 @@ import trees.attributes.NominalAttribute;
 public class Node {
 	
 	// Maximum value for the sales to predict
-	public final static int MAX_SALES = 100000;
+	public final static int MAX_SALES = 50000;
 	
 	// List of the children nodes. If the node is a leaf, this list is set to null.
     private List<Node> children = new ArrayList<Node>();
@@ -24,22 +24,26 @@ public class Node {
     private double splitValue = 0.0;
 	// If the node is a leaf, its the predicted value
     private double output = 0.0;
-    
+    // Level of the node in the tree
     private int depth = 1;
-    
+    // Indexes of the allowed attributes in the subtree which root is the current node
+    private List<Integer> allowedAttributes = new ArrayList<Integer>();
+     
     // Constructor for a leaf node
-    public Node() {
+    public Node(List<Integer> allowedAttributes) {
+    	this.allowedAttributes = allowedAttributes;
     	setOutput(Math.random() * MAX_SALES);
     }
 
     // Constructor for a Nominal attribute (the split values correspond to the available values of the attribute)
-	public Node(Attribute attribute) {
+	public Node(List<Integer> allowedAttributes, Attribute attribute) {
+		this.allowedAttributes = allowedAttributes;
         this.attribute = attribute;
 	}
 
 	// Constructor for a Numerical or Date attribute
-    public Node(Attribute attribute, double splitValue) {
-        this.attribute = attribute;
+    public Node(List<Integer> allowedAttributes, Attribute attribute, double splitValue) {
+        this(allowedAttributes, attribute);
         this.splitValue = splitValue;
     }
     
@@ -55,14 +59,6 @@ public class Node {
         this.parent = parent;
         setDepth();
     }
-
-    /*
-    public void addChild(Attribute attribute) {
-        Node child = new Node(attribute);
-        child.setParent(this);
-        this.children.add(child);
-    }
-    */
 
     public void addChild(Node child) {
         child.setParent(this);
@@ -122,7 +118,15 @@ public class Node {
 		}
 	}
 	
-    public boolean isRoot() {
+    public List<Integer> getAllowedAttributes() {
+		return allowedAttributes;
+	}
+
+	public void setAllowedAttributes(List<Integer> allowedAttributes) {
+		this.allowedAttributes = allowedAttributes;
+	}
+
+	public boolean isRoot() {
         return (this.parent == null);
     }
 
@@ -144,13 +148,16 @@ public class Node {
 	 */
 	public double predict(double[] data) {
 		if (this.isLeaf()) {
+			//System.out.println("Prédiction feuille " + getOutput());
 			return getOutput();		
 		} else {
+			//System.out.print("Prédiction noeud " + this.getAttribute().getName());
 			int attributeId = this.attribute.getId();
 			
 			// ADDED FOR NULL VALUES
 			// if the associated data is null (=-INF) and the attribute take null values into account, return last child
 			if(data[attributeId] == Double.NEGATIVE_INFINITY && this.attribute.isNullValuePossible()){
+				//System.out.println("Prédiction attribut null");
 				return children.get(this.children.size()-1).predict(data);
 			} else {
 				if (this.attribute.getType() == Attribute.AttributeType.NOMINAL) {
@@ -158,14 +165,17 @@ public class Node {
 					int[] splitValues = at.getSplitValues();
 					for (int i = 0; i < splitValues.length; i++) {
 						if ((data[attributeId] == (double)splitValues[i])){
+							//System.out.println(" valeur attribut nomimal " + data[attributeId]);
 							return children.get(i).predict(data);
 						}
 					}
 					return Double.NaN;
 				} else {
 					if (data[attributeId] <= splitValue) {
+						//System.out.println(" attribut non nominal " + data[attributeId] + " <= " + splitValue);
 	                    return children.get(0).predict(data);
 	                } else {
+						//System.out.println(" attribut non nominal " + data[attributeId] + " > " + splitValue);
 	                    return children.get(1).predict(data);
 	                }
 				} 
@@ -194,10 +204,10 @@ public class Node {
 		Node copy;
 		
 		if (this.isLeaf()) {
-			copy = new Node();
+			copy = new Node(new ArrayList<Integer>(this.getAllowedAttributes()));
 			copy.setOutput(this.getOutput());
 		} else {
-			copy = new Node(this.getAttribute());
+			copy = new Node(new ArrayList<Integer>(this.getAllowedAttributes()), this.getAttribute());
 			copy.setSplitValue(this.getSplitValue());
 			for (Node child : this.getChildren()) {
 				copy.addChild(child.copy());

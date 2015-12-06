@@ -1,6 +1,7 @@
 package trees;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,13 +17,21 @@ import trees.attributes.NumericalAttribute;
 public class RegressionTree {
 	
 	// The list of the available attributes in the data
-	private List<Attribute> attributes = null;
+	private HashMap<Integer,Attribute> attributes = null;
 	// Reference to the root node of the tree
 	private Node root = null;
 	// Maximum depth of the tree
 	private int depth = 0;
 	// Tree fitness
 	private double fitness = -1;
+	
+	public RegressionTree(HashMap<Integer,Attribute> attributes) {
+		List<Integer> allowedAttributes = new ArrayList<Integer>();
+		allowedAttributes.addAll(attributes.keySet());
+		setAttributes(attributes);
+		setDepth(allowedAttributes.size()+1);
+		setRoot(randomInitialization(allowedAttributes, this.getDepth()));
+	}
 	
 	/**
 	 * Constructor of a RegressionTree
@@ -31,10 +40,16 @@ public class RegressionTree {
 	 * @param depthMax
 	 * 		Max depth of the tree
 	 */
-	public RegressionTree(List<Attribute> attributes, int depthMax) {
+	public RegressionTree(HashMap<Integer,Attribute> attributes, int depthMax) {
+		List<Integer> allowedAttributes = new ArrayList<Integer>();
+		allowedAttributes.addAll(attributes.keySet());
 		setAttributes(attributes);
-		setDepth(depthMax);
-		setRoot(randomInitialization(depthMax));
+		if (depthMax > allowedAttributes.size()+1) {
+			setDepth(allowedAttributes.size()+1);
+		} else {
+			setDepth(depthMax);
+		}
+		setRoot(randomInitialization(allowedAttributes, this.getDepth()));
 	}
 
 	/**
@@ -42,16 +57,18 @@ public class RegressionTree {
 	 * @param root
 	 * 		The node to be set as the root of the tree
 	 */
-	public RegressionTree(List<Attribute> attributes, int depthMax, Node root) {
+	public RegressionTree(HashMap<Integer,Attribute> attributes, Node root, int depthMax) {
+		List<Integer> allowedAttributes = new ArrayList<Integer>();
+		allowedAttributes.addAll(attributes.keySet());
 		setAttributes(attributes);
 		setDepth(depthMax);
         setRoot(root);
 	}
 	
-	public List<Attribute> getAttributes() {
+	public HashMap<Integer,Attribute> getAttributes() {
 		return attributes;
 	}
-	public void setAttributes(List<Attribute> attributes) {
+	public void setAttributes(HashMap<Integer,Attribute> attributes) {
 		this.attributes = attributes;
 	}
 	public int getDepth() {
@@ -75,6 +92,10 @@ public class RegressionTree {
 		
 		this.fitness = f;
 	}
+	
+	public void reinitializeFitness() {
+		this.fitness = -1;
+	}
 
 	public Node getRoot() {
 		return root;
@@ -94,9 +115,9 @@ public class RegressionTree {
         Node root = this.getRoot();
         
         if (root == null) {
-            return new RegressionTree(this.getAttributes(), this.getDepth(), null);
+            return new RegressionTree(this.getAttributes(), null, this.getDepth());
         } else {
-            return new RegressionTree(this.getAttributes(), this.getDepth(), root.copy());
+            return new RegressionTree(this.getAttributes(), root.copy(), this.getDepth());
         }
     }
 	
@@ -120,22 +141,25 @@ public class RegressionTree {
 	 * For Numerical or Date attribute, the split value for the node is randomly selected within the range defined for the attribute
 	 * (see attributes constructors)
 	 */
-	private Node randomInitialization(int depth) {
+	private Node randomInitialization(List<Integer> allowedAttributes, int depth) {
+		//System.out.println("Random initialisation profondeur " + depth + " attributs " + allowedAttributes.toString());
 		double probabilityLeafNode = 0.3;
 		Node root;
 		Random r = new Random();
-		if (depth == 1 || r.nextDouble() <= probabilityLeafNode) {
-			return new Node();			
+		if (allowedAttributes.isEmpty() || depth == 1 || r.nextDouble() <= probabilityLeafNode) {
+			return new Node(new ArrayList<Integer>(allowedAttributes));			
 		} else {
-			int attributeId = r.nextInt(attributes.size());
+			// Changed for the control of the attributes in the tree
+			int attributeId = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
 			Attribute attribute = attributes.get(attributeId);
-			
+			List<Integer> childAttributes = new ArrayList<Integer>(allowedAttributes);
+			childAttributes.remove((Integer)attributeId);
 			if (attribute.getType() == Attribute.AttributeType.NOMINAL) {
 				NominalAttribute at = (NominalAttribute)attribute;
 				int[] splitValues = at.getSplitValues();
-				root = new Node(attribute);
+				root = new Node(new ArrayList<Integer>(allowedAttributes), attribute);
 				for (int i = 0; i < splitValues.length; i++) {
-					root.addChild(randomInitialization(depth-1));
+					root.addChild(randomInitialization(childAttributes, depth-1));
 				}
 			} else {
 				double min, max;
@@ -148,14 +172,14 @@ public class RegressionTree {
 					min = at.getMin();
 					max = at.getMax();
 				}
-				root = new Node(attribute, min + r.nextDouble() * max);
-				root.addChild(randomInitialization(depth-1));
-				root.addChild(randomInitialization(depth-1));
+				root = new Node(new ArrayList<Integer>(allowedAttributes), attribute, min + r.nextDouble() * (max-min));
+				root.addChild(randomInitialization(childAttributes, depth-1));
+				root.addChild(randomInitialization(childAttributes, depth-1));
 			}
 			// ADDED FOR NULL VALUES
 			// adding a child at the end of children list to take into account null values (<-> -INF in double)
 			if(attribute.isNullValuePossible()){
-				root.addChild(randomInitialization(depth-1));
+				root.addChild(randomInitialization(childAttributes, depth-1));
 			}
 			return root;
 		}

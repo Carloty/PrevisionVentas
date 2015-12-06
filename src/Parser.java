@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -12,47 +13,52 @@ import trees.attributes.NumericalAttribute;
 
 public class Parser {
 	
-	public static List<Attribute> getAllAttributes(){
-		List<Attribute> attributes = new ArrayList<Attribute>();
+	public static HashMap<Integer, Attribute> getAllAttributes(){
+		HashMap<Integer,Attribute> attributes = new HashMap<Integer,Attribute>();
 		
 		try {
-			attributes.add(new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115, false));
+			attributes.put(0, new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115, false));
 			
 			String[] tipoTienda = {"a", "b", "c", "d"};
-			attributes.add(new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1, false));
+			attributes.put(1, new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1, false));
 			
 			String[] surdito = {"a", "b", "c"};
-			attributes.add(new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2, false));
+			attributes.put(2, new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2, false));
 			
-			attributes.add(new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000, false));
+			attributes.put(3, new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000, true));
 			
-			attributes.add(new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "yyyy-MM-dd", 4, true)); // dd/MM/yyyy
+			attributes.put(4, new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "yyyy-MM-dd", 4, true)); // dd/MM/yyyy
 			
-			attributes.add(new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1, false));
+			String[] bool = {"0", "1"};
+			attributes.put(5, new NominalAttribute("promocion2", Attribute.AttributeType.NOMINAL, bool, 5, false));
+			//attributes.put(5, new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1, false));
 			
-			attributes.add(new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 50, true));
+			attributes.put(6, new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 52, true));
 			
-			attributes.add(new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2000, 2020, true));
+			attributes.put(7, new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2000, 2020, true));
 			
 			String[] mesPromocion = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
-			attributes.add(new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8, true));
-			attributes.add(new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9, true));
-			attributes.add(new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10, true));
-			attributes.add(new NominalAttribute("cuartoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 11, true));
+			attributes.put(8, new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8, true));
+			attributes.put(9, new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9, true));
+			attributes.put(10, new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10, true));
+			attributes.put(11, new NominalAttribute("cuartoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 11, true));
 			
 			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
-			attributes.add(new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12, false));
+			attributes.put(12, new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12, false));
 			
-			attributes.add(new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 13, false));
+			attributes.put(13, new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 13, false));
 
-			attributes.add(new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
+			attributes.put(14, new NominalAttribute("abierto", Attribute.AttributeType.NOMINAL, bool, 14, false));
+			//attributes.put(14, new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
 
-			attributes.add(new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1, false));
+			attributes.put(15, new NominalAttribute("promocion", Attribute.AttributeType.NOMINAL, bool, 15, false));
+			//attributes.put(15, new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1, false));
 			
 			String[] festivo = {"0", "a", "b", "c"};
-			attributes.add(new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 16, false));
+			attributes.put(16, new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 16, false));
 			
-			attributes.add(new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1, false));
+			attributes.put(17, new NominalAttribute("noLectivo", Attribute.AttributeType.NOMINAL, bool, 17, false));
+			//attributes.put(17, new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1, false));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -63,7 +69,7 @@ public class Parser {
 	}
 	
 	public static double[][] getDataFromFile(String fileName){
-		List<Attribute> attList = getAllAttributes();
+		HashMap<Integer,Attribute> attList = getAllAttributes();
 		String line;
 		double[][] data = new double[610328][19];
 		int index = 0;
@@ -85,7 +91,7 @@ public class Parser {
 		return data;
 	}
 	
-	public static double[] transformCSVdataToDouble(String s, List<Attribute> attList){
+	public static double[] transformCSVdataToDouble(String s, HashMap<Integer,Attribute> attList){
 		double[] data = new double[19];
 		String[] attributes = s.split(",");
 		try{
