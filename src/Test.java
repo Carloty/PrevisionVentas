@@ -41,18 +41,18 @@ public class Test {
 			/*
 			 * A regression tree is randomly build using the list of attributes and a maximum depth 
 			 */
-			RegressionTree tree = new RegressionTree(attributes);
+			RegressionTree tree = new RegressionTree(attributes, 4);
 			
 			
 			// Build a data that can be put in entry of the tree. The table should only contain doubles. (See attribute type's methods) 
 			double[] data = {dateAttr.valueOf("1992-10-09"), 2, 0};
 			
-			/*
+			
 			// Visualize the tree in a new frame
 			VisualTree treeV = new VisualTree("Regression tree", tree);
 			treeV.printTree();
 			
-			
+			/*
 			// Printout the value predicted by the tree (value of the ultimate leaf reached) 
 			System.out.println(tree.predict(data));
 			
@@ -117,7 +117,7 @@ public class Test {
 				System.out.println("Attributs autorisés : " + node.getAllowedAttributes());
 			}
 			
-			*/
+			
 			// Test mutation
 			VisualTree treeV = new VisualTree("Before Mutation", tree);
 			treeV.printTree();
@@ -130,7 +130,7 @@ public class Test {
 
 			VisualTree treeV2 = new VisualTree("Before Mutation 2", tree);
 			treeV2.printTree();
-			
+			*/
 			
 			
 		} catch (Exception e) {

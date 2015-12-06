@@ -153,8 +153,8 @@ public class RegressionTree {
 			int attributeId = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
 			Attribute attribute = attributes.get(attributeId);
 			List<Integer> childAttributes = new ArrayList<Integer>(allowedAttributes);
-			childAttributes.remove((Integer)attributeId);
 			if (attribute.getType() == Attribute.AttributeType.NOMINAL) {
+				childAttributes.remove((Integer)attributeId);
 				NominalAttribute at = (NominalAttribute)attribute;
 				int[] splitValues = at.getSplitValues();
 				root = new Node(new ArrayList<Integer>(allowedAttributes), attribute);
