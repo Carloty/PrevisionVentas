@@ -33,40 +33,13 @@ public class Parser {
 			
 			String[] bool = {"0", "1"};
 			attributes.put(5, new NominalAttribute("promocion2", Attribute.AttributeType.NOMINAL, bool, 5, false));
-			//attributes.put(5, new NumericalAttribute("promocion2", Attribute.AttributeType.NUMERICAL, 5, 0, 1, false));
 			
 			attributes.put(6, new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 52, true));
 			
 			attributes.put(7, new NumericalAttribute("anoInicioPromocion2", Attribute.AttributeType.NUMERICAL, 7, 2009, 2015, true));
 			
 			String[] intervaloPromo = {"Jan-Apr-Jul-Oct", "Feb-May-Aug-Nov", "Mar-Jun-Sept-Dec"};
-			/*
-			String[] mesPromocion = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"};
-			attributes.put(8, new NominalAttribute("primeroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 8, true));
-			attributes.put(9, new NominalAttribute("segundoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 9, true));
-			attributes.put(10, new NominalAttribute("terceroMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 10, true));
-			attributes.put(11, new NominalAttribute("cuartoMesPromocion", Attribute.AttributeType.NOMINAL, mesPromocion, 11, true));
-			*/
 			attributes.put(8, new NominalAttribute("intervaloPromocion", Attribute.AttributeType.NOMINAL, intervaloPromo, 8, true));
-			
-			/*
-			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
-			attributes.put(12, new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 12, false));
-			
-			attributes.put(13, new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 13, false));
-
-			attributes.put(14, new NominalAttribute("abierto", Attribute.AttributeType.NOMINAL, bool, 14, false));
-			//attributes.put(14, new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
-
-			attributes.put(15, new NominalAttribute("promocion", Attribute.AttributeType.NOMINAL, bool, 15, false));
-			//attributes.put(15, new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1, false));
-			
-			String[] festivo = {"0", "a", "b", "c"};
-			attributes.put(16, new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 16, false));
-			
-			attributes.put(17, new NominalAttribute("noLectivo", Attribute.AttributeType.NOMINAL, bool, 17, false));
-			//attributes.put(17, new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1, false));
-			*/
 			
 			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
 			attributes.put(9, new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 9, false));
@@ -74,17 +47,13 @@ public class Parser {
 			attributes.put(10, new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 10, false));
 
 			attributes.put(11, new NominalAttribute("abierto", Attribute.AttributeType.NOMINAL, bool, 11, false));
-			//attributes.put(14, new NumericalAttribute("abierto", Attribute.AttributeType.NUMERICAL, 14, 0, 1, false));
 
 			attributes.put(12, new NominalAttribute("promocion", Attribute.AttributeType.NOMINAL, bool, 12, false));
-			//attributes.put(15, new NumericalAttribute("promocion", Attribute.AttributeType.NUMERICAL, 15, 0, 1, false));
 			
 			String[] festivo = {"0", "a", "b", "c"};
 			attributes.put(13, new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 13, false));
 			
 			attributes.put(14, new NominalAttribute("noLectivo", Attribute.AttributeType.NOMINAL, bool, 14, false));
-			//attributes.put(17, new NumericalAttribute("noLectivo", Attribute.AttributeType.NUMERICAL, 17, 0, 1, false));
-			
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -143,26 +112,6 @@ public class Parser {
 			// Intervalo Promocion
 			if (attributes[9].equals("")){
 				data[8] = attList.get(8).valueOf("");
-				/*
-				data[8] = attList.get(8).valueOf("");
-				data[9] = attList.get(9).valueOf("");
-				data[10] = attList.get(10).valueOf("");
-				data[11] = attList.get(11).valueOf("");
-				
-				
-				data[12] = attList.get(12).valueOf(attributes[10]);
-				data[13] = attList.get(13).valueOf(attributes[11]);
-				
-				// No se guarda el atributo Clientes : attributes[12]
-				
-				data[14] = attList.get(14).valueOf(attributes[13]);
-				data[15] = attList.get(15).valueOf(attributes[14]);
-				data[16] = attList.get(16).valueOf(attributes[15]);
-				data[17] = attList.get(17).valueOf(attributes[16]);
-				
-				// Ventas
-				data[18] = Double.valueOf(attributes[17]);
-				*/
 				
 				data[9] = attList.get(9).valueOf(attributes[10]);
 				data[10] = attList.get(10).valueOf(attributes[11]);
@@ -177,25 +126,6 @@ public class Parser {
 				// Ventas
 				data[15] = Double.valueOf(attributes[17]);
 			} else {
-				/*
-				data[8] = attList.get(8).valueOf(attributes[9]);
-				data[9] = attList.get(9).valueOf(attributes[10]);
-				data[10] = attList.get(10).valueOf(attributes[11]);
-				data[11] = attList.get(11).valueOf(attributes[12]);
-				
-				data[12] = attList.get(12).valueOf(attributes[13]);
-				data[13] = attList.get(13).valueOf(attributes[14]);
-				
-				// No se guarda el atributo Clientes : attributes[15]
-				
-				data[14] = attList.get(14).valueOf(attributes[16]);
-				data[15] = attList.get(15).valueOf(attributes[17]);
-				data[16] = attList.get(16).valueOf(attributes[18]);
-				data[17] = attList.get(17).valueOf(attributes[19]);
-				
-				// Ventas
-				data[18] = Double.valueOf(attributes[20]);
-				*/
 				String interval = attributes[9] + "-" + attributes[10] + "-" + attributes[11] + "-" + attributes[12];
 				data[8] = attList.get(8).valueOf(interval);
 				
@@ -219,20 +149,23 @@ public class Parser {
 		return data;
 	}
 	
-	/*public static double[][] modifyListAttributes(HashMap<Integer,Attribute> attributesList, int[] attributesToKeep, double[][] data){
+	public static double[][] modifyListAttributes(HashMap<Integer,Attribute> attributesList, int[] attributesToKeep, double[][] data){
 		HashMap<Integer,Attribute> newAttributes = new HashMap<Integer,Attribute>();
 		
-		List<Attribute> newList = new ArrayList<Attribute>();
 		if (attributesList.size() == attributesToKeep.length-1){
 			// Creating a new list with attributes to keep
-			for (int i=0; i< attributesToKeep.length-1; i++){
-				if (attributesToKeep[i] == 1){
-					newAttributes.put.add(attributesList.get(i));
+			int newID = 0;
+			for(int id : attributesList.keySet()){
+				if (attributesToKeep[id] == 1){
+					Attribute att = attributesList.get(id);
+					att.setId(newID);
+					newAttributes.put(newID, att);
+					newID++;
 				}
 			}
 			
 			// Keeping cols of data array associated to the attributes to keep
-			double[][] temp = new double[data.length][newList.size()+1];
+			double[][] temp = new double[data.length][newAttributes.size()+1];
 			for(int row = 0; row < data.length; row++){
 				// column index of the new array
 				int index = 0;
@@ -244,22 +177,15 @@ public class Parser {
 					}
 				}
 			}
-
-			// Updating attributes ID
-			for (int i=0; i< newList.size(); i++){
-				Attribute att = newList.get(i);
-				att.setId(i);
-				newList.remove(i); newList.add(i, att); // TODO or not ?
-			}	
 			
 			attributesList.clear();
-			attributesList.addAll(newList);
+			attributesList.putAll(newAttributes);
 			
 			return temp;
 		} else {
 			return data;
 		}
-	}*/
+	}
 
 	public static double[][] getNSamples(int n, double[][] data){
 		Random r = new Random();
