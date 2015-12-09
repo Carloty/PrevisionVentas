@@ -1,3 +1,4 @@
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,7 +241,7 @@ public class GeneticProgramming {
 	 * @param mutationProbability
 	 *            Mutation probability
 	 */
-	public static void mutation(List<RegressionTree> trees, double mutationProbability) {
+	public static void mutation(List<RegressionTree> trees, double mutationProbability) throws ParseException {
 		/*
 		 TODO choose the mutation's type
 		 */
@@ -333,7 +334,7 @@ public class GeneticProgramming {
 	 * The mutation probability of the node is a linear function of the depth between rootMutationProbabily and leafMutationProbability
 	 * Only mutate a unique node in the tree (or none)
 	 */
-	private static void subTreeMutation(RegressionTree tree, double rootMutationProbability) {
+	private static void subTreeMutation(RegressionTree tree, double rootMutationProbability) throws ParseException {
 		// The probability of mutation increase with the depth of the nodes
 		double leafMutationProbability = 3 * rootMutationProbability;
 		List<Node> nodes = tree.getAllNodes();
@@ -363,10 +364,17 @@ public class GeneticProgramming {
 				} else {
 					//System.out.println("Noeud choisi pour mutation PAS root");
 					Node parentNode = node.getParent();
+					/*
 					List<Integer> parentAttributes = parentNode.getAllowedAttributes();
 					HashMap<Integer,Attribute> newAttributes = new HashMap<Integer,Attribute>();
 					for (Integer attrID : parentAttributes) {
 						newAttributes.put(attrID,tree.getAttributes().get(attrID));
+						newAttributes.remove(parentNode.getAttribute());
+					}*/
+					List<Attribute> parentAttributes = parentNode.getAllowedAttributes();
+					HashMap<Integer,Attribute> newAttributes = new HashMap<Integer,Attribute>();
+					for (Attribute attr : parentAttributes) {
+						newAttributes.put(attr.getId(),attr);
 						newAttributes.remove(parentNode.getAttribute());
 					}
 					newSubTree = new RegressionTree(newAttributes, maxDepth - node.getDepth() + 1);
@@ -392,7 +400,7 @@ public class GeneticProgramming {
 		}
 		*/
 		//return inclusionReplacement(initialPopulation, children, data);
-		return elitistReplacement(initialPopulation, children, data, 0.3);
+		return elitistReplacement(initialPopulation, children, data, 0.2);
 	}
 	
 	private static List<RegressionTree> elitistReplacement(List<RegressionTree> initialPopulation, List<RegressionTree> children, double[][] data, double proportion) {

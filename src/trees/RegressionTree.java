@@ -1,5 +1,6 @@
 package trees;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,9 +26,8 @@ public class RegressionTree {
 	// Tree fitness
 	private double fitness = -1;
 	
-	public RegressionTree(HashMap<Integer,Attribute> attributes) {
-		List<Integer> allowedAttributes = new ArrayList<Integer>();
-		allowedAttributes.addAll(attributes.keySet());
+	public RegressionTree(HashMap<Integer,Attribute> attributes) throws ParseException {
+		List<Attribute> allowedAttributes = new ArrayList<Attribute>(attributes.values());
 		setAttributes(attributes);
 		setDepth(allowedAttributes.size()+1);
 		setRoot(randomInitialization(allowedAttributes, this.getDepth()));
@@ -40,9 +40,8 @@ public class RegressionTree {
 	 * @param depthMax
 	 * 		Max depth of the tree
 	 */
-	public RegressionTree(HashMap<Integer,Attribute> attributes, int depthMax) {
-		List<Integer> allowedAttributes = new ArrayList<Integer>();
-		allowedAttributes.addAll(attributes.keySet());
+	public RegressionTree(HashMap<Integer,Attribute> attributes, int depthMax) throws ParseException {
+		List<Attribute> allowedAttributes = new ArrayList<Attribute>(attributes.values());
 		setAttributes(attributes);
 		if (depthMax > allowedAttributes.size()+1) {
 			setDepth(allowedAttributes.size()+1);
@@ -141,40 +140,67 @@ public class RegressionTree {
 	 * For Numerical or Date attribute, the split value for the node is randomly selected within the range defined for the attribute
 	 * (see attributes constructors)
 	 */
-	private Node randomInitialization(List<Integer> allowedAttributes, int depth) {
+	private Node randomInitialization(List<Attribute> allowedAttributes, int depth) throws ParseException {
 		//System.out.println("Random initialisation profondeur " + depth + " attributs " + allowedAttributes.toString());
-		double probabilityLeafNode = 0.3;
+		double probabilityLeafNode = 1/((double)depth);
+		//System.out.println("Proba feuille = " + probabilityLeafNode);
 		Node root;
 		Random r = new Random();
 		if (allowedAttributes.isEmpty() || depth == 1 || r.nextDouble() <= probabilityLeafNode) {
-			return new Node(new ArrayList<Integer>(allowedAttributes));			
+			return new Node(new ArrayList<Attribute>(allowedAttributes));			
 		} else {
 			// Changed for the control of the attributes in the tree
-			int attributeId = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
-			Attribute attribute = attributes.get(attributeId);
-			List<Integer> childAttributes = new ArrayList<Integer>(allowedAttributes);
+			//int attributeId = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
+			//Attribute attribute = attributes.get(attributeId);
+			Attribute attribute = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
+			List<Attribute> childAttributes = new ArrayList<Attribute>(allowedAttributes);
+			childAttributes.remove(attribute);
 			if (attribute.getType() == Attribute.AttributeType.NOMINAL) {
-				childAttributes.remove((Integer)attributeId);
 				NominalAttribute at = (NominalAttribute)attribute;
 				int[] splitValues = at.getSplitValues();
-				root = new Node(new ArrayList<Integer>(allowedAttributes), attribute);
+				root = new Node(childAttributes, attribute);
 				for (int i = 0; i < splitValues.length; i++) {
-					root.addChild(randomInitialization(childAttributes, depth-1));
+					root.addChild(randomInitialization(new ArrayList<Attribute>(childAttributes), depth-1));
 				}
 			} else {
-				double min, max;
+				double min, max, splitValue;
 				if (attribute.getType() == Attribute.AttributeType.DATE) {
 					DateAttribute at = (DateAttribute)attribute;
 					min = at.getEarliest();
 					max = at.getLatest();
+					splitValue = min + r.nextDouble() * (max-min);
+					root = new Node(new ArrayList<Attribute>(allowedAttributes), attribute, splitValue);
+					// Values for the left child
+					DateAttribute newAtLeft = new DateAttribute(at.getName(), at.getDescription(), at.getType(), at.getFormat(), at.getId(), at.isNullValuePossible());
+					newAtLeft.setEarliest(min);
+					newAtLeft.setLatest(splitValue);
+					List<Attribute> childAttributesLeft = new ArrayList<Attribute>(childAttributes);
+					childAttributesLeft.add(newAtLeft);
+					root.addChild(randomInitialization(childAttributesLeft, depth-1));
+					// Values for the right child
+					DateAttribute newAtRight = new DateAttribute(at.getName(), at.getDescription(), at.getType(), at.getFormat(), at.getId(), at.isNullValuePossible());
+					newAtRight.setEarliest(splitValue);
+					newAtRight.setLatest(max);
+					List<Attribute> childAttributesRight = new ArrayList<Attribute>(childAttributes);
+					childAttributesRight.add(newAtRight);
+					root.addChild(randomInitialization(childAttributesRight, depth-1));
 				} else {
 					NumericalAttribute at = (NumericalAttribute)attribute;
 					min = at.getMin();
 					max = at.getMax();
+					splitValue = min + r.nextDouble() * (max-min);
+					root = new Node(new ArrayList<Attribute>(allowedAttributes), attribute, splitValue);
+					// Values for the left child
+					NumericalAttribute newAtLeft = new NumericalAttribute(at.getName(), at.getDescription(), at.getType(), at.getId(), min, splitValue, at.isNullValuePossible());
+					List<Attribute> childAttributesLeft = new ArrayList<Attribute>(childAttributes);
+					childAttributesLeft.add(newAtLeft);
+					root.addChild(randomInitialization(childAttributesLeft, depth-1));	
+					// Values for the right child
+					NumericalAttribute newAtRight = new NumericalAttribute(at.getName(), at.getDescription(), at.getType(), at.getId(), splitValue, max, at.isNullValuePossible());
+					List<Attribute> childAttributesRight = new ArrayList<Attribute>(childAttributes);
+					childAttributesRight.add(newAtRight);
+					root.addChild(randomInitialization(childAttributesRight, depth-1));				
 				}
-				root = new Node(new ArrayList<Integer>(allowedAttributes), attribute, min + r.nextDouble() * (max-min));
-				root.addChild(randomInitialization(childAttributes, depth-1));
-				root.addChild(randomInitialization(childAttributes, depth-1));
 			}
 			// ADDED FOR NULL VALUES
 			// adding a child at the end of children list to take into account null values (<-> -INF in double)

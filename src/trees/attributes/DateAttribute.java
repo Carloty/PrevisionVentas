@@ -24,13 +24,13 @@ public class DateAttribute extends Attribute {
 	 * The earliest possible date
 	 * (initialize at 01/01/2000 in constructor)
 	 */
-	public final double earliest;
+	public double earliest;
 	
 	/**
 	 * The latest possible date
 	 * (initialize at 01/01/2020 in constructor)
 	 */
-	public final double latest;
+	public double latest;
 
 	/**
 	 * Constructor of an DateAttribute (without description)
@@ -70,6 +70,13 @@ public class DateAttribute extends Attribute {
 		earliest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01"));
 		latest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01"));
 	}
+	
+	public DateAttribute(String name, String description, AttributeType type, DateFormat format, int id, boolean nullPossible) throws ParseException {
+		super(name, description, type, id, nullPossible);
+		this.setFormat(format);
+		earliest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2000-01-01"));
+		latest = hoursSince2010(new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-01"));
+	}
 
 	public DateFormat getFormat() {
 		return format;
@@ -87,8 +94,17 @@ public class DateAttribute extends Attribute {
 		return earliest;
 	}
 	
+	public void setEarliest(double earliest) {
+		this.earliest = earliest;
+	}
+	
+	
 	public double getLatest() {
 		return latest;
+	}
+	
+	public void setLatest(double latest) {
+		this.latest = latest;
 	}
 	
     /**

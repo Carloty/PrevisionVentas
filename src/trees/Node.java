@@ -12,7 +12,7 @@ import trees.attributes.NominalAttribute;
 public class Node {
 	
 	// Maximum value for the sales to predict
-	public final static int MAX_SALES = 50000;
+	public final static double MAX_SALES = 50000;
 	
 	// List of the children nodes. If the node is a leaf, this list is set to null.
     private List<Node> children = new ArrayList<Node>();
@@ -27,22 +27,22 @@ public class Node {
     // Level of the node in the tree
     private int depth = 1;
     // Indexes of the allowed attributes in the subtree which root is the current node
-    private List<Integer> allowedAttributes = new ArrayList<Integer>();
+    private List<Attribute> allowedAttributes = new ArrayList<Attribute>();
      
     // Constructor for a leaf node
-    public Node(List<Integer> allowedAttributes) {
+    public Node(List<Attribute> allowedAttributes) {
     	this.allowedAttributes = allowedAttributes;
     	setOutput(Math.random() * MAX_SALES);
     }
 
     // Constructor for a Nominal attribute (the split values correspond to the available values of the attribute)
-	public Node(List<Integer> allowedAttributes, Attribute attribute) {
+	public Node(List<Attribute> allowedAttributes, Attribute attribute) {
 		this.allowedAttributes = allowedAttributes;
         this.attribute = attribute;
 	}
 
 	// Constructor for a Numerical or Date attribute
-    public Node(List<Integer> allowedAttributes, Attribute attribute, double splitValue) {
+    public Node(List<Attribute> allowedAttributes, Attribute attribute, double splitValue) {
         this(allowedAttributes, attribute);
         this.splitValue = splitValue;
     }
@@ -118,11 +118,11 @@ public class Node {
 		}
 	}
 	
-    public List<Integer> getAllowedAttributes() {
+    public List<Attribute> getAllowedAttributes() {
 		return allowedAttributes;
 	}
 
-	public void setAllowedAttributes(List<Integer> allowedAttributes) {
+	public void setAllowedAttributes(List<Attribute> allowedAttributes) {
 		this.allowedAttributes = allowedAttributes;
 	}
 
@@ -204,10 +204,10 @@ public class Node {
 		Node copy;
 		
 		if (this.isLeaf()) {
-			copy = new Node(new ArrayList<Integer>(this.getAllowedAttributes()));
+			copy = new Node(new ArrayList<Attribute>(this.getAllowedAttributes()));
 			copy.setOutput(this.getOutput());
 		} else {
-			copy = new Node(new ArrayList<Integer>(this.getAllowedAttributes()), this.getAttribute());
+			copy = new Node(new ArrayList<Attribute>(this.getAllowedAttributes()), this.getAttribute());
 			copy.setSplitValue(this.getSplitValue());
 			for (Node child : this.getChildren()) {
 				copy.addChild(child.copy());
