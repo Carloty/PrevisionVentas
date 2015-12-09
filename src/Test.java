@@ -60,17 +60,16 @@ public class Test {
 			// Test for the copy of the tree
 			RegressionTree copy = tree.copy();
 			VisualTree treeC = new VisualTree("Copy", copy);
-			treeC.printTree();			
-			
+			treeC.printTree();	
+			*/		
 			// Test import data
 			double[][] dataCSV = Parser.getDataFromFile("age_pr2_without.csv");
-			List<Attribute> l = Parser.getAllAttributes();
+			HashMap<Integer,Attribute> l = Parser.getAllAttributes();
 			
 			// Test choosing attributes
-			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
 			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);
-			
-			
+			/*
 			// Test Selection
 			
 			// Creating a list of trees
