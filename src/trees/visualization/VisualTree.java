@@ -1,5 +1,6 @@
 package trees.visualization;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -51,15 +52,16 @@ public class VisualTree extends JFrame {
 	 */
 	private Object addVisualNode(Object parentV, Node node, int width) {
 		Object nodeV;
+		DecimalFormat df = new DecimalFormat("########");
 		if (node.isLeaf()) {
-			nodeV = graph.insertVertex(parentV, null, node.getOutput(), width, 2, 80, 30, "", true);		
+			nodeV = graph.insertVertex(parentV, null, df.format(node.getOutput()), width, 2, 80, 30, "", true);		
 		} else {
 			Attribute attribute = node.getAttribute();
 			nodeV = graph.insertVertex(parentV, null, attribute.getName(), width, 2, 80, 30, "", true);
 			if (attribute.getType() == Attribute.AttributeType.NOMINAL) {
 				Object childV;
-				NominalAttribute at = (NominalAttribute)attribute;				
-				int[] splitValues = at.getSplitValues();
+				NominalAttribute at = (NominalAttribute)attribute;	
+				String[] splitValues = at.values();
 				List<Node> children = node.getChildren();
 				for (int i = 0; i < children.size(); i++) {
 					childV = addVisualNode(nodeV, children.get(i), i*2);
@@ -79,8 +81,8 @@ public class VisualTree extends JFrame {
 					graph.insertEdge(nodeV, null, "<= " + at.doubleToDate(node.getSplitValue()), nodeV, childL);
 					graph.insertEdge(nodeV, null, "> " + at.doubleToDate(node.getSplitValue()), nodeV, childR);
 				} else {
-					graph.insertEdge(nodeV, null, "<= " + node.getSplitValue(), nodeV, childL);
-					graph.insertEdge(nodeV, null, "> " + node.getSplitValue(), nodeV, childR);
+					graph.insertEdge(nodeV, null, "<= " + df.format(node.getSplitValue()), nodeV, childL);
+					graph.insertEdge(nodeV, null, "> " + df.format(node.getSplitValue()), nodeV, childR);
 				}
 				
 				if (attribute.isNullValuePossible()){
