@@ -10,15 +10,17 @@ import trees.visualization.VisualTree;
 public class Main {
 
 	static List<RegressionTree> population;
+	static List<Integer> numberIterations;
 
 	public static void main(String[] args) throws ParseException {
 		// Execution parameters
-		int numExecutions = 5;
-		int populationSize = 50; 
-		int treeDepth = 5;
+		int numExecutions = 2;
+		int populationSize = 5; 
+		int treeDepth = 10;
 		double initialMutation = 0.33;
 		int selectivePressure = 3;
-		int stopCriteria = 50;
+		int stopCriteria = 5;
+		int sizeTraining = 60000;
 
 		// Dataset
 		HashMap<Integer, Attribute> allAttributes = Parser.getAllAttributes();
@@ -40,7 +42,7 @@ public class Main {
 		
 		double[][] allData = Parser.getDataFromFile("age_pr2_without.csv");
 		//double[][] dataTrain = allData;
-		double[][] dataTrain = Parser.getNSamples(6000, allData);
+		double[][] dataTrain = Parser.getNSamples(sizeTraining, allData);
 		/*
 		 * TODO modifyAttributes
 		 */
@@ -48,6 +50,7 @@ public class Main {
 
 		// Executions
 		List<RegressionTree> bests = new ArrayList<RegressionTree>();
+		numberIterations = new ArrayList<Integer>();
 		System.out.println("------------------ TEST ---------------------");
 		System.out.println("Population size = " + populationSize);
 		System.out.println("Trees depth = " + treeDepth);
@@ -55,9 +58,10 @@ public class Main {
 		System.out.println("Initial mutation percentage = " + initialMutation);
 		System.out.println("Selective pressure = " + selectivePressure);
 		System.out.println("Stop criteria = " + stopCriteria);
+		System.out.println("Number of instances for training = " + sizeTraining);
 		System.out.println("---------------------------------------------");
 
-		for (int i = 0; i < numExecutions; i++) {
+		for (int i = 1; i <= numExecutions; i++) {
 			System.out.println("--------- EXECUTION NUMBER " + i + " ---------");
 			// Initial population
 			//System.out.println("Début initialisation pop");
@@ -72,11 +76,17 @@ public class Main {
 			bests.add(execute(allAttributes, dataTrain, populationSize, initialMutation, selectivePressure, stopCriteria));		
 		}
 
+		// Summary of the execution
+		System.out.println("---------- SUMMARY OF THE EXECUTION --------------");
 		// Test of the best trees
-		int i = 0;
+		int i = 1;
 		for (RegressionTree tree : bests) {
+			System.out.println("EXECUTION " + i + " :");
+			System.out.println(numberIterations.get(i-1) + " iterations");
+			System.out.println("Error on training for the best tree : " + tree.getEvaluation(dataTrain));
 			tree.reinitializeFitness();
 			double fitness = tree.getEvaluation(allData);
+			System.out.println("Error on all data for the best tree : " + fitness);
 			VisualTree treeV = new VisualTree("Tree " + i + " | " + fitness, tree);
 			treeV.printTree();
 			i ++;
@@ -102,13 +112,13 @@ public class Main {
 			} else {
 				counter ++;
 			}
-			
+			/*
 			for (RegressionTree tree : population) {
-				/*
+				
 				VisualTree treeV = new VisualTree("Tree", tree);
-				treeV.printTree();*/
+				treeV.printTree();
 				System.out.println(tree.getEvaluation(dataTrain));
-			}
+			}*/
 			
 			System.out.println("Best individual : " + fittest.get(0).getEvaluation(dataTrain));
 			mutationPercentage = initialMutation;
@@ -119,6 +129,7 @@ public class Main {
 		fittest = GeneticProgramming.getFittest(population,1, dataTrain);
 		System.out.println("Best of all iterations : " + fittest.get(0).getEvaluation(dataTrain));
 		System.out.println("Number of iterations : " + i);
+		numberIterations.add(i);
 		return fittest.get(0);
 
 	}
@@ -133,13 +144,13 @@ public class Main {
 			children.add(population.get(selected).copy());
 		}
 		GeneticProgramming.mutation(children, mutationPercentage);
-		
+		/*
 		for (RegressionTree child : children) {
-			/*
+			
 			VisualTree treeC = new VisualTree("Child", child);
-			treeC.printTree();*/
+			treeC.printTree();
 			System.out.println(child.getEvaluation(data));
-		}
+		}*/
 		population = GeneticProgramming.replacement(population, children, data);
 	}
 
