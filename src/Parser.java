@@ -1,12 +1,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
-
-import com.sun.media.sound.SimpleSoundbank;
 
 import trees.attributes.Attribute;
 import trees.attributes.DateAttribute;
@@ -99,7 +95,6 @@ public class Parser {
 			// Ano y mes inicio
 			if(!attributes[4].equals("")){
 				String date = attributes[5] + "-" + attributes[4] + "-01";
-				//String date = "01/"+attributes[5]+"/"+attributes[6];
 				data[4] = attList.get(4).valueOf(date);
 			} else {
 				data[4] = attList.get(4).valueOf("");

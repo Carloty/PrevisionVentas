@@ -23,30 +23,12 @@ public class Main {
 		int sizeTraining = 60000;
 
 		// Dataset
-		HashMap<Integer, Attribute> allAttributes = Parser.getAllAttributes();
-		
-		/*
-		 * Quit the attributes that aren't correctly codified
-		
-		allAttributes.remove(1);
-		allAttributes.remove(2);
-		allAttributes.remove(3);
-		allAttributes.remove(4);
-		allAttributes.remove(5);
-		allAttributes.remove(6);
-		allAttributes.remove(7);
-		allAttributes.remove(8);
-		allAttributes.remove(10);
-		allAttributes.remove(13);
-		allAttributes.remove(14);*/
-		
+		HashMap<Integer, Attribute> allAttributes = Parser.getAllAttributes();		
 		double[][] allData = Parser.getDataFromFile("age_pr2_without.csv");
-		//double[][] dataTrain = allData;
 		double[][] dataTrain = Parser.getNSamples(sizeTraining, allData);
 		/*
 		 * TODO modifyAttributes
 		 */
-
 
 		// Executions
 		List<RegressionTree> bests = new ArrayList<RegressionTree>();
@@ -54,7 +36,6 @@ public class Main {
 		System.out.println("------------------ TEST ---------------------");
 		System.out.println("Population size = " + populationSize);
 		System.out.println("Trees depth = " + treeDepth);
-		//System.out.println("Trees depth = " + (allAttributes.size()+1));
 		System.out.println("Initial mutation percentage = " + initialMutation);
 		System.out.println("Selective pressure = " + selectivePressure);
 		System.out.println("Stop criteria = " + stopCriteria);
@@ -63,16 +44,10 @@ public class Main {
 
 		for (int i = 1; i <= numExecutions; i++) {
 			System.out.println("--------- EXECUTION NUMBER " + i + " ---------");
-			// Initial population
-			//System.out.println("Début initialisation pop");
 			population = new ArrayList<RegressionTree>();
 			for (int j = 0; j < populationSize; j++) {
-				//System.out.println("Début initialisation arbre numéro " + (j+1));
 				population.add(new RegressionTree(allAttributes, treeDepth));
-				//population.add(new RegressionTree(allAttributes));
-				//System.out.println("Fin initialisation arbre numéro " + (j+1));
 			}
-			//System.out.println("Fin initialisation pop");
 			bests.add(execute(allAttributes, dataTrain, populationSize, initialMutation, selectivePressure, stopCriteria));		
 		}
 
@@ -101,7 +76,6 @@ public class Main {
 		double bestSoFar = Double.NEGATIVE_INFINITY;
 		int counter = 0;
 
-
 		// Execution
 		do {
 			System.out.println("--------- ITERATION NUMBER " + i + " ---------");
@@ -111,18 +85,9 @@ public class Main {
 				counter = 0;
 			} else {
 				counter ++;
-			}
-			/*
-			for (RegressionTree tree : population) {
-				
-				VisualTree treeV = new VisualTree("Tree", tree);
-				treeV.printTree();
-				System.out.println(tree.getEvaluation(dataTrain));
-			}*/
-			
+			}			
 			System.out.println("Best individual : " + fittest.get(0).getEvaluation(dataTrain));
 			mutationPercentage = initialMutation;
-			//mutationPercentage = (initialMutation/2) * (1 + Math.tanh((1.5*populationSize - i)/(populationSize/3)));
 			computeIteration(mutationPercentage, selectivePressure, dataTrain);
 			i++;
 		} while (counter < stopCriteria);
@@ -136,21 +101,11 @@ public class Main {
 
 	private static void computeIteration(double mutationPercentage, double selectivePressure, double[][] data) throws ParseException {
 		List<Integer> fittestIndexes = GeneticProgramming.selection(population, selectivePressure, data);
-		/*
-		List<RegressionTree> children = GeneticProgramming.combination(population, fittestIndexes);
-		*/
 		List<RegressionTree> children = new ArrayList<RegressionTree>();
 		for (Integer selected : fittestIndexes) {
 			children.add(population.get(selected).copy());
 		}
 		GeneticProgramming.mutation(children, mutationPercentage);
-		/*
-		for (RegressionTree child : children) {
-			
-			VisualTree treeC = new VisualTree("Child", child);
-			treeC.printTree();
-			System.out.println(child.getEvaluation(data));
-		}*/
 		population = GeneticProgramming.replacement(population, children, data);
 	}
 

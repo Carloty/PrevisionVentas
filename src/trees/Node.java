@@ -148,16 +148,13 @@ public class Node {
 	 */
 	public double predict(double[] data) {
 		if (this.isLeaf()) {
-			//System.out.println("Prédiction feuille " + getOutput());
 			return getOutput();		
 		} else {
-			//System.out.print("Prédiction noeud " + this.getAttribute().getName());
 			int attributeId = this.attribute.getId();
 			
 			// ADDED FOR NULL VALUES
 			// if the associated data is null (=-INF) and the attribute take null values into account, return last child
 			if(data[attributeId] == Double.NEGATIVE_INFINITY && this.attribute.isNullValuePossible()){
-				//System.out.println("Prédiction attribut null");
 				return children.get(this.children.size()-1).predict(data);
 			} else {
 				if (this.attribute.getType() == Attribute.AttributeType.NOMINAL) {
@@ -165,18 +162,15 @@ public class Node {
 					int[] splitValues = at.getSplitValues();
 					for (int i = 0; i < splitValues.length; i++) {
 						if ((data[attributeId] == (double)splitValues[i])){
-							//System.out.println(" valeur attribut nomimal " + data[attributeId]);
 							return children.get(i).predict(data);
 						}
 					}
 					return Double.NaN;
 				} else {
 					if (data[attributeId] <= splitValue) {
-						//System.out.println(" attribut non nominal " + data[attributeId] + " <= " + splitValue);
-	                    return children.get(0).predict(data);
+						 return children.get(0).predict(data);
 	                } else {
-						//System.out.println(" attribut non nominal " + data[attributeId] + " > " + splitValue);
-	                    return children.get(1).predict(data);
+						return children.get(1).predict(data);
 	                }
 				} 
 			}

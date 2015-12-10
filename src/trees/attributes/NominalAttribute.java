@@ -103,12 +103,12 @@ public class NominalAttribute extends Attribute {
 	 * Get the double value associated to a value taken by the nominal attribute
      */
 	@Override
-    public double valueOf(String s) {// throws ParseException {
+    public double valueOf(String s) {
 		if (!s.equals("")){
 			Integer i = map.get(s);       
 	        return i;
 		} else {
-    		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
+    		return Double.NEGATIVE_INFINITY;
     	}
     }
 	

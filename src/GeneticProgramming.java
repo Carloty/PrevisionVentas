@@ -54,10 +54,7 @@ public class GeneticProgramming {
 	 * 
 	 * @return A list containing the two children created by the swapping
 	 */
-	public static List<RegressionTree> combination(RegressionTree father, RegressionTree mother) {
-		/*
-		 * TODO change to private
-		 */
+	private static List<RegressionTree> combination(RegressionTree father, RegressionTree mother) {
 		List<RegressionTree> descendents = new ArrayList<RegressionTree>();
 		RegressionTree des1, des2;
 		int index1 = -1;
@@ -143,12 +140,6 @@ public class GeneticProgramming {
 			probas[i] = probas[i - 1] + fitness[i] / fitnessTotal;
 		}
 		probas[populationSize - 1] = 1;
-		/*
-		System.out.println("Probas :");
-		for (int i = 0; i < populationSize; i++) {
-			System.out.println(probas[i]);
-		}
-		*/
 
 		// Select the fittest individuals
 		Random r = new Random();
@@ -157,10 +148,6 @@ public class GeneticProgramming {
 			randDouble = r.nextDouble();
 			for (int j = 0; j < populationSize; j++) {
 				if (randDouble < probas[j]) {
-					/*
-					System.out.println("Tiré au sort : " + randDouble);
-					System.out.println("Sélectionné : " + j);
-					*/
 					fittestIndexes.add(j);
 					break;
 				}
@@ -183,12 +170,6 @@ public class GeneticProgramming {
 			}
 			ranks[i]++;
 		}
-		/*
-		System.out.println("Ranks :");
-		for (int i = 0; i < populationSize; i++) {
-			System.out.println(ranks[i]);
-		}
-		*/
 		return ranks;
 	}
 
@@ -200,12 +181,6 @@ public class GeneticProgramming {
 		for (int i = 0; i < populationSize; i++) {
 			fitness[i] = selectivePressure * (ranks[i] - 1) / (populationSize - 1);
 		}
-		/*
-		System.out.println("Fitness :");
-		for (int i = 0; i < populationSize; i++) {
-			System.out.println(fitness[i]);
-		}
-		*/
 		return fitness;
 	}
 
@@ -351,26 +326,16 @@ public class GeneticProgramming {
 			// The mutation probability of the node is a linear function of the depth between rootMutationProbabily and leafMutationProbability
 			double mutationProba = ((leafMutationProbability - rootMutationProbability) * node.getDepth()
 					+ rootMutationProbability * maxDepth - leafMutationProbability) / (maxDepth - 1);
-			//System.out.println("Prof max arbre = " + maxDepth + " | Prof noeud = " + node.getDepth() + " | proba mutation = " + mutationProba);
 			randDouble = r.nextDouble();
 			// Mutation needed
 			if (randDouble <= mutationProba) {
 				RegressionTree newSubTree;
 				// If the node is root, generate a complete tree
 				if (node.isRoot()) {
-					//System.out.println("Noeud choisi pour mutation est root");
 					tree.setRoot(new RegressionTree(tree.getAttributes(), maxDepth).getRoot());
 				// If not, generate a sub tree and link it to the parent node
 				} else {
-					//System.out.println("Noeud choisi pour mutation PAS root");
 					Node parentNode = node.getParent();
-					/*
-					List<Integer> parentAttributes = parentNode.getAllowedAttributes();
-					HashMap<Integer,Attribute> newAttributes = new HashMap<Integer,Attribute>();
-					for (Integer attrID : parentAttributes) {
-						newAttributes.put(attrID,tree.getAttributes().get(attrID));
-						newAttributes.remove(parentNode.getAttribute());
-					}*/
 					List<Attribute> parentAttributes = parentNode.getAllowedAttributes();
 					HashMap<Integer,Attribute> newAttributes = new HashMap<Integer,Attribute>();
 					for (Attribute attr : parentAttributes) {
@@ -393,12 +358,6 @@ public class GeneticProgramming {
 	}
 	
 	public static List<RegressionTree> replacement(List<RegressionTree> initialPopulation, List<RegressionTree> children, double[][] data) {
-		/*
-		System.out.println("Children");
-		for (RegressionTree child : children) {
-			System.out.println(child.getEvaluation(data));
-		}
-		*/
 		//return inclusionReplacement(initialPopulation, children, data);
 		return elitistReplacement(initialPopulation, children, data, 0.2);
 	}

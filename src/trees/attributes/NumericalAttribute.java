@@ -87,7 +87,7 @@ public class NumericalAttribute extends Attribute {
 		if (!s.equals("")){
 			return Double.valueOf(s);
 		} else {
-    		return Double.NEGATIVE_INFINITY; // add condition (&& isNullValuePossible() ???)
+    		return Double.NEGATIVE_INFINITY;
     	}
 		
 	}

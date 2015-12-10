@@ -141,17 +141,12 @@ public class RegressionTree {
 	 * (see attributes constructors)
 	 */
 	private Node randomInitialization(List<Attribute> allowedAttributes, int depth) throws ParseException {
-		//System.out.println("Random initialisation profondeur " + depth + " attributs " + allowedAttributes.toString());
 		double probabilityLeafNode = 1/((double)depth);
-		//System.out.println("Proba feuille = " + probabilityLeafNode);
 		Node root;
 		Random r = new Random();
 		if (allowedAttributes.isEmpty() || depth == 1 || r.nextDouble() <= probabilityLeafNode) {
 			return new Node(new ArrayList<Attribute>(allowedAttributes));			
 		} else {
-			// Changed for the control of the attributes in the tree
-			//int attributeId = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
-			//Attribute attribute = attributes.get(attributeId);
 			Attribute attribute = allowedAttributes.get(r.nextInt(allowedAttributes.size()));
 			List<Attribute> childAttributes = new ArrayList<Attribute>(allowedAttributes);
 			childAttributes.remove(attribute);
