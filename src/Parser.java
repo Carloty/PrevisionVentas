@@ -82,6 +82,37 @@ public class Parser {
 		return data;
 	}
 	
+	public static void getDataFromFile(String fileName, double percentTrain, double[][] dataTrain, double[][] dataTest){
+		HashMap<Integer,Attribute> attList = getAllAttributes();
+		String line;
+		Random r = new Random();
+		
+		int indexTrain = 0;
+		int indexTest = 0;
+		
+		double[] dataSample;
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
+			
+			while ((line = br.readLine()) != null) {
+				dataSample = Parser.transformCSVdataToDouble(line, attList);
+				double proba = r.nextDouble();
+				if(proba < percentTrain && indexTrain < dataTrain.length || proba >= percentTrain && indexTest >= dataTest.length){
+					dataTrain[indexTrain++] = dataSample;
+				} else {
+					dataTest[indexTest++] = dataSample;
+				}
+			}
+			
+			br.close();
+
+		} catch (Exception e) {
+			System.err.println("ERROR WHILE GETTING LINES FROM FILE WITH TEST/TRAIN");
+			e.printStackTrace();
+		}
+	}
+	
 	public static double[] transformCSVdataToDouble(String s, HashMap<Integer,Attribute> attList){
 		double[] data = new double[16];
 		String[] attributes = s.split(",");

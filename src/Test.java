@@ -61,15 +61,24 @@ public class Test {
 			RegressionTree copy = tree.copy();
 			VisualTree treeC = new VisualTree("Copy", copy);
 			treeC.printTree();	
-			*/		
+					
 			// Test import data
 			double[][] dataCSV = Parser.getDataFromFile("age_pr2_without.csv");
 			HashMap<Integer,Attribute> l = Parser.getAllAttributes();
-			
+			*/
+			// Test import data train and test
+			double percentTrain = 0.7;
+			int numberTrain = (int)(610328*percentTrain);
+			int numberTest = 610328 - numberTrain;
+			double[][] dataTrain = new double[numberTrain][16];
+			double[][] dataTest = new double[numberTest][16];
+			Parser.getDataFromFile("age_pr2_without.csv",0.7,dataTrain,dataTest);
+
+			/*
 			// Test choosing attributes
 			int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
 			dataCSV = Parser.modifyListAttributes(l, attributesToKeep, dataCSV);
-			/*
+			
 			// Test Selection
 			
 			// Creating a list of trees
