@@ -14,21 +14,22 @@ public class Main {
 
 	public static void main(String[] args) throws ParseException {
 		// Execution parameters
-		int numExecutions = 2;
+		int numExecutions = 5;
 		int populationSize = 5; 
 		int treeDepth = 10;
 		double initialMutation = 0.33;
 		int selectivePressure = 3;
 		int stopCriteria = 5;
 		int sizeTraining = 60000;
+		
 
 		// Dataset
 		HashMap<Integer, Attribute> allAttributes = Parser.getAllAttributes();		
 		double[][] allData = Parser.getDataFromFile("age_pr2_without.csv");
-		double[][] dataTrain = Parser.getNSamples(sizeTraining, allData);
-		/*
-		 * TODO modifyAttributes
-		 */
+		int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+		double[][] dataFiltered = Parser.modifyListAttributes(allAttributes, attributesToKeep, allData);
+		//double[][] dataTrain = Parser.getNSamples(sizeTraining, allData);
+		double[][] dataTrain = Parser.getNSamples(sizeTraining, dataFiltered);
 
 		// Executions
 		List<RegressionTree> bests = new ArrayList<RegressionTree>();
@@ -110,3 +111,4 @@ public class Main {
 	}
 
 }
+
