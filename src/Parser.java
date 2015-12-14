@@ -15,20 +15,20 @@ public class Parser {
 		HashMap<Integer,Attribute> attributes = new HashMap<Integer,Attribute>();
 		
 		try {
-			attributes.put(0, new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115, false));
+			attributes.put(0, new NumericalAttribute("tienda", Attribute.AttributeType.NUMERICAL, 0, 1, 1115, true));
 			
 			String[] tipoTienda = {"a", "b", "c", "d"};
-			attributes.put(1, new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1, false));
+			attributes.put(1, new NominalAttribute("tipoTienda", Attribute.AttributeType.NOMINAL, tipoTienda, 1, true));
 			
 			String[] surdito = {"a", "b", "c"};
-			attributes.put(2, new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2, false));
+			attributes.put(2, new NominalAttribute("surdito", Attribute.AttributeType.NOMINAL, surdito, 2, true));
 			
 			attributes.put(3, new NumericalAttribute("distanciaCompetition", Attribute.AttributeType.NUMERICAL, 3, 0, 100000, true));
 			
 			attributes.put(4, new DateAttribute("fechaInicio", Attribute.AttributeType.DATE, "yyyy-MM-dd", 4, true)); // dd/MM/yyyy
 			
 			String[] bool = {"0", "1"};
-			attributes.put(5, new NominalAttribute("promocion2", Attribute.AttributeType.NOMINAL, bool, 5, false));
+			attributes.put(5, new NominalAttribute("promocion2", Attribute.AttributeType.NOMINAL, bool, 5, true));
 			
 			attributes.put(6, new NumericalAttribute("semanaInicioPromocion2", Attribute.AttributeType.NUMERICAL, 6, 1, 52, true));
 			
@@ -38,18 +38,18 @@ public class Parser {
 			attributes.put(8, new NominalAttribute("intervaloPromocion", Attribute.AttributeType.NOMINAL, intervaloPromo, 8, true));
 			
 			String[] diaSemana = {"1", "2", "3", "4", "5", "6", "7"};
-			attributes.put(9, new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 9, false));
+			attributes.put(9, new NominalAttribute("diaSemana", Attribute.AttributeType.NOMINAL, diaSemana, 9, true));
 			
-			attributes.put(10, new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 10, false));
+			attributes.put(10, new DateAttribute("fecha", Attribute.AttributeType.DATE, "yyyy-MM-dd", 10, true));
 
-			attributes.put(11, new NominalAttribute("abierto", Attribute.AttributeType.NOMINAL, bool, 11, false));
+			attributes.put(11, new NominalAttribute("abierto", Attribute.AttributeType.NOMINAL, bool, 11, true));
 
-			attributes.put(12, new NominalAttribute("promocion", Attribute.AttributeType.NOMINAL, bool, 12, false));
+			attributes.put(12, new NominalAttribute("promocion", Attribute.AttributeType.NOMINAL, bool, 12, true));
 			
 			String[] festivo = {"0", "a", "b", "c"};
-			attributes.put(13, new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 13, false));
+			attributes.put(13, new NominalAttribute("festivo", Attribute.AttributeType.NOMINAL, festivo, 13, true));
 			
-			attributes.put(14, new NominalAttribute("noLectivo", Attribute.AttributeType.NOMINAL, bool, 14, false));
+			attributes.put(14, new NominalAttribute("noLectivo", Attribute.AttributeType.NOMINAL, bool, 14, true));
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -59,6 +59,9 @@ public class Parser {
 		return attributes;
 	}
 	
+	/*
+	 * Need .csv without "", without the headline describing the attributes, with the client column
+	 */
 	public static double[][] getDataFromFile(String fileName){
 		HashMap<Integer,Attribute> attList = getAllAttributes();
 		String line;
@@ -183,8 +186,12 @@ public class Parser {
 				data[13] = attList.get(13).valueOf(attributes[15]);
 				data[14] = attList.get(14).valueOf(attributes[16]);
 				
-				// Ventas
-				data[15] = Double.valueOf(attributes[17]);
+				// Ventas		
+				if (attributes.length == 18) {
+					data[15] = Double.valueOf(attributes[17]);
+				} else {
+					data[15] = 0;
+				}
 			} else {
 				String interval = attributes[9] + "-" + attributes[10] + "-" + attributes[11] + "-" + attributes[12];
 				data[8] = attList.get(8).valueOf(interval);
@@ -200,7 +207,11 @@ public class Parser {
 				data[14] = attList.get(14).valueOf(attributes[19]);
 				
 				// Ventas
-				data[15] = Double.valueOf(attributes[20]);
+				if (attributes.length == 21) {
+					data[15] = Double.valueOf(attributes[20]);
+				} else {
+					data[15] = 0;
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("TROUBLES HERE !");

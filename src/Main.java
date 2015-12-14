@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,23 +18,22 @@ public class Main {
 
 	public static void main(String[] args) throws ParseException {
 		// Execution parameters
-		int numExecutions = 5;
-		int populationSize = 5; 
-		int treeDepth = 10;
+		int numExecutions = 10;
+		int populationSize = 30; 
+		int treeDepth = 5;
 		double initialMutation = 0.33;
-		int selectivePressure = 3;
-		int stopCriteria = 5;
+		int selectivePressure = 10;
+		int stopCriteria = 30;
 		int sizeTraining = 60000;
 		
 
 		// Dataset
 		HashMap<Integer, Attribute> allAttributes = Parser.getAllAttributes();		
 		double[][] allData = Parser.getDataFromFile("age_pr2_without.csv");
-		int[] attributesToKeep = {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+		int[] attributesToKeep = {1,0,0,0,0,0,0,0,0,1,0,1,1,0,0,1};
 		double[][] dataFiltered = Parser.modifyListAttributes(allAttributes, attributesToKeep, allData);
-		//double[][] dataTrain = Parser.getNSamples(sizeTraining, allData);
 		double[][] dataTrain = Parser.getNSamples(sizeTraining, dataFiltered);
-
+		
 		// Executions
 		List<RegressionTree> bests = new ArrayList<RegressionTree>();
 		numberIterations = new ArrayList<Integer>();
@@ -56,18 +59,43 @@ public class Main {
 		System.out.println("---------- SUMMARY OF THE EXECUTION --------------");
 		// Test of the best trees
 		int i = 1;
+		RegressionTree best = null;
+		double fitnessBest = Double.NEGATIVE_INFINITY;
 		for (RegressionTree tree : bests) {
 			System.out.println("EXECUTION " + i + " :");
 			System.out.println(numberIterations.get(i-1) + " iterations");
-			System.out.println("Error on training for the best tree : " + tree.getEvaluation(dataTrain));
+			double fitness = tree.getEvaluation(dataTrain);
+			System.out.println("Error on training for the best tree : " + fitness);
 			tree.reinitializeFitness();
-			double fitness = tree.getEvaluation(allData);
+			fitness = tree.getEvaluation(dataFiltered);
 			System.out.println("Error on all data for the best tree : " + fitness);
 			VisualTree treeV = new VisualTree("Tree " + i + " | " + fitness, tree);
 			treeV.printTree();
 			i ++;
+			if (fitness > fitnessBest) {
+				best = tree;
+				fitnessBest = fitness;
+			}
 		}
-
+		
+		// Prediction for unsupervised data
+		File results = new File("results.csv");
+		double[][] unsupervisedData = new double[406884][16];
+		DecimalFormat df = new DecimalFormat("########");
+		unsupervisedData = Parser.getDataFromFile("age_pr2_test_final alumnos.csv");
+		HashMap<Integer, Attribute> allAttributesPredict = Parser.getAllAttributes();
+		double[][] unsupervisedDataFiltered = Parser.modifyListAttributes(allAttributesPredict, attributesToKeep, unsupervisedData);
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(results, true));
+			for (int j = 0; j < unsupervisedData.length; j++){
+				bw.append(df.format(best.predict(unsupervisedDataFiltered[j])) + "\n");
+			}
+			bw.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private static RegressionTree execute(HashMap<Integer,Attribute> allAttributes, double[][] dataTrain, int populationSize, double initialMutation,int selectivePressure, int stopCriteria) throws ParseException {
